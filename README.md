@@ -352,5 +352,21 @@ Next we rebase the sequence of commits 3b360f5 to master from the new orphan bra
 ```
 ![fig9](fig9.png)
 
+
+### FIX ME
+```
+git diff --name-only sha1 sha2
+```
+
+```
+git diff --name-status sha1 sha2
+
+```
+
+```
+git show ???
+```
+
+
 ### Remote repos and Github
 
