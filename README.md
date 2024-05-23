@@ -196,7 +196,12 @@ Now switch back to branch master and add file3.txt and then a second version of 
 ![fig1](fig1.png)
 
 As you can see from the figure above we now have two divergent, but separate, branches.
-
+## Creating remote branches
+First create a local branch then push it to the remote. Example
+```
+git branch experimental
+git checkout experimental
+git push origin experimental
 
 ### Merging 
  Once we are satisfied with the "development" on branch dev typically we want to incorporate the changes into master. We make sure first that we are "on" branch master.
