@@ -389,3 +389,9 @@ to associate an existing local branch with  remote
 git branch --set-uptream-to=origin/branch-name local-branch-name
 ````
 
+If we have a local branch, say ```someBranch```, that doesn't exist in the remote, and we want to add it
+with a different name, say ```anotherName```
+```
+git push --set-upstream origin anotherName
+```
+```
