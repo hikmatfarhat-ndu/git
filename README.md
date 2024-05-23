@@ -374,4 +374,18 @@ git show ???
 
 
 ### Remote repos and Github
+To add a remote repo you need the url and give it a name
+```
+git remote add origin URL
+```
+Here we gave it the name origin (instead of using URL every time)
+To fetch the info about the remote 
+```
+git fetch origin
+```
+
+to associate an existing local branch with  remote
+```
+git branch --set-uptream-to=origin/branch-name local-branch-name
+````
 
