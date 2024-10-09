@@ -198,13 +198,15 @@ Now switch back to branch master and add file3.txt and then a second version of 
 As you can see from the figure above we now have two divergent, but separate, branches.
 ## Creating remote branches
 First create a local branch then push it to the remote. Example
+
 ```
 git branch experimental
 git checkout experimental
 git push origin experimental
-
+```
 ### Merging 
  Once we are satisfied with the "development" on branch dev typically we want to incorporate the changes into master. We make sure first that we are "on" branch master.
+
 ```bash
 >git checkout master
 Already on 'master'
@@ -259,7 +261,7 @@ Unmerged paths:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-But it also tells us where it he conflict is
+But it also tells us where the conflict is
 ```bash
 >cat file2.txt
 first version of file2
@@ -391,7 +393,7 @@ git branch --set-uptream-to=origin/branch-name local-branch-name
 
 If we have a local branch, say ```someBranch```, that doesn't exist in the remote, and we want to add it
 with a different name, say ```anotherName```
+
 ```
 git push --set-upstream origin anotherName
-```
 ```
