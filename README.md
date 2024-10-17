@@ -1,14 +1,23 @@
 # GIT
 
 ## Basics
+A version of a file can be in one of three places as show in the figure : working directory, staging area, or git directory
+![img1](three-stages.png)
+The figure shows the typical commands that are used to move a version of a file between the three stages.
+It should be noted that in the working directory and staging area there could be only one version of a given file. The Git directory, however, can contain multiple versions of the file.
 
+The working directory contains the files that you are working on. The staging area contains contains information on what **will be** in the next commit.
+A typical workflow would be:
+1. Modify files in the working directory
+2. "add" the modified files to the staging area
+3. "commit" the files in the staging area to the local git repository (directory)
+   
 ### Initialization
-Typically there are two ways to start version control on a directory. The first is initializing the directory
-to be under version control.
 
-There are three states: working directory, staging area (or index), and committed. The index contains information on what **will be** in the next commit.
+Typically there are two ways to start version control on a directory. The first is initializing the directory to be under version control.
 
-We start with an example. The file you are reading is currently in the working directory.
+We start with an example. Create a folder called git (on Windows). Open a terminal and cd to that folder.
+
 ```bash
 >git init
 >git status
@@ -16,7 +25,7 @@ On branch master
 No commits yet
 nothing to commit (create/copy files and use "git add" to track)
 ```
-Now create a new file, ```file.txt```
+Now create a new file, ```file1.txt```
 ```bash
 >echo "first version of file1" > file1.txt
 >git log
@@ -30,8 +39,7 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)
 ```
-At this point file1 is newly added to the working directory, so it is untracked. To start tracking it we added
-it to the index using the **add** command.
+At this point file1.txt is newly added to the working directory, so it is untracked. To start tracking it, we add it to the index using the **add** command.
 
 ```bash
 >git add file1.txt
@@ -42,8 +50,7 @@ Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
         new file:   file1.txt
 ```
-So now there are two (identical) copies of file1, in the **working** directory and in the **index**. If we make changes
-to file1.txt they will affect the one in the **working** directory only. Edit "file1.txt", by adding the line "second version of file1.txt".
+So now there are two (identical) copies of file1, in the **working** directory and in the **index**. If we make changes to file1.txt they will affect the one in the **working** directory only. Edit "file1.txt", by adding the line "second version of file1.txt".
 
 ```bash
 >echo "second version of file1.txt">>file1.txt
@@ -61,7 +68,7 @@ Changes not staged for commit:
 ```
 
 At this point the version in the **working** directory and the **index** are different. We can either add the second
-version to the **index** or commit the **index**, or restore the version in the index (that contains one line only) to the working directory.
+version to the **index**, commit the **index**, or restore the version in the index (that contains one line only) to the working directory.
 Let us try the last option.
 ```bash
 >cat file1.txt
@@ -94,8 +101,8 @@ Next we add the line "second version of text1" to file1.txt, add it to the index
 >git add file1.txt
 >echo "third version of file1.txt">> file1.txt
 ```
-So we have **three** versions of file1.txt: 
-- one in the working tree
+At this point we have **three** versions of file1.txt: 
+- one in the working directory
 - one in the index
 - one was committed. 
 
@@ -114,12 +121,14 @@ index 0005eef..73c2f46 100644
 +third version of file1.txt
 ```
 
-The above says that the version in the working tree has an extra line "third version of file1.txt".
-
+The above says that the version in the working tree has an extra line "third version of file1.txt" which doesn't exist in the index.
+In general, a line preceded with '-' means it is in ```a``` but not in ```b``` and '+' it is in ```b``` not in ```a```.
 We can also show the difference between working tree and the last commit.
 
 ```bash
->git diff HEAD #or git diff master
+>git diff HEAD #or git diff master or main 
+               # depending on the name of the branch
+
 diff --git a/file1.txt b/file1.txt
 index 7436323..73c2f46 100644
 --- a/file1.txt
@@ -150,7 +159,7 @@ shows the difference between the **index** and last commit.
 ### Branching
 
 
-Typically, to work on a new feature in a software base we create a new branch from the main one. This way all the changes we make do not affect the supposedly "working code". But after we are done developing the new feature we would like to incorporate back the new changes into the main part. Before we proceed we perform two commits to get three different 
+Typically, to work on a new feature in a software base we create a new branch from the main one. This way all the changes we make do not affect the supposedly "working code". But after we are done developing the new feature we would like to incorporate  the new changes back into the main part. Before we proceed we perform two commits to get three different 
 versions of file1.txt in the database.
 ```bash
 >git commit -m "added second version of file1"
@@ -163,7 +172,7 @@ versions of file1.txt in the database.
 da21bb7 added first version of file1
 6b66b6a initial commit
 ```
-First simple example. 
+Simple branching example. 
 ```bash
 >git checkout -b dev # or git branch dev ; git checkout dev
 >git log --oneline
@@ -196,7 +205,7 @@ Now switch back to branch master and add file3.txt and then a second version of 
 ![fig1](fig1.png)
 
 As you can see from the figure above we now have two divergent, but separate, branches.
-## Creating remote branches
+## Remote branches
 First create a local branch then push it to the remote. Example
 
 ```
