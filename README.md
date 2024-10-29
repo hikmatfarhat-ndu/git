@@ -1,6 +1,6 @@
 # GIT
 
-## Basics
+## 1. Basics
 Git is used to keep track of all your work that you choose to save. It does so by saving a sequence of "snapshots" or versions of your files. 
 
 A version of a file can be in one of three places as show in the figure : working directory, staging area, or git directory
@@ -19,7 +19,7 @@ A typical workflow would be:
 2. "add" the modified files to the staging area
 3. "commit" the files in the staging area to the local git repository (directory)
    
-### Initialization
+<!-- ### 1.1 Initialization -->
 
 Typically there are two ways to start version control on a directory. The first is initializing the directory to be under version control.
 
@@ -28,17 +28,18 @@ We start with an example. Create a folder called git (on Windows). Open a termin
 ```bash
 >git init
 >git status
-On branch master
+On branch main
 No commits yet
 nothing to commit (create/copy files and use "git add" to track)
 ```
+**Note**: depending on the version of git the initial branch could be called "master" instead of "main". If this is the case change its name to "main" using ```git branch -m main```. 
 Now create a new file, ```file1.txt```
 ```bash
 >echo "first version of file1" > file1.txt
 >git log
 fatal: your current branch 'master' does not have any commits yet
 >git status
-On branch master
+On branch main
 No commits yet
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
@@ -51,7 +52,7 @@ At this point file1.txt is newly added to the working directory, so it is untrac
 ```bash
 >git add file1.txt
 >git status
-On branch master
+On branch main
 No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
@@ -62,7 +63,7 @@ So now there are two (identical) copies of file1, in the **working** directory a
 ```bash
 >echo "second version of file1.txt">>file1.txt
 >git status
-On branch master
+On branch main
 No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
@@ -74,8 +75,7 @@ Changes not staged for commit:
         modified:   file1.txt
 ```
 
-At this point the version in the **working** directory and the **index** are different. We can either add the second
-version to the **index**, commit the **index**, or restore the version in the index (that contains one line only) to the working directory.
+At this point the version in the **working** directory and the **index** are different. We can either add the second version to the **index**, commit the **index**, or restore the version in the index (that contains one line only) to the working directory.
 Let us try the last option.
 ```bash
 >cat file1.txt
@@ -85,7 +85,7 @@ second version of file1.txt
 
 >git restore file1.txt
 >git status
-On branch master
+On branch mains
 No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
@@ -99,14 +99,14 @@ Our next action is to commit the content of the **index** (staging area).
 ```bash
 >git commit -m "added first version of file1"
 >git status
-On branch master
+On branch main
 nothing to commit, working tree clean
 ```
 Next we add the line "second version of text1" to file1.txt, add it to the index then add "third version" to file1. 
 ```bash
->echo "second version of file1.txt">> file1.txt
+>echo "second version of file1">> file1.txt
 >git add file1.txt
->echo "third version of file1.txt">> file1.txt
+>echo "third version of file1">> file1.txt
 ```
 At this point we have **three** versions of file1.txt: 
 - one in the working directory
@@ -128,9 +128,9 @@ index 0005eef..73c2f46 100644
 +third version of file1.txt
 ```
 
-The above says that the version in the working tree has an extra line "third version of file1.txt" which doesn't exist in the index.
+The above says that the version in the working tree (b) has an extra line "third version of file1.txt" which doesn't exist in the index (a).
 In general, a line preceded with '-' means it is in ```a``` but not in ```b``` and '+' it is in ```b``` not in ```a```.
-We can also show the difference between working tree and the last commit.
+We can also show the difference between working tree (b) and the last commit (a).
 
 ```bash
 >git diff HEAD #or git diff master or main 
@@ -145,7 +145,7 @@ index 7436323..73c2f46 100644
 +second version of file1.txt
 +third version of file1.txt
 ```
-Finally, we can show the difference between the index and the last commit (or any specified commit)
+Finally, we can show the difference between the index (b) and the last commit (a) (or any specified commit)
 ```bash
 >git diff --cached 
 diff --git a/file1.txt b/file1.txt
@@ -157,38 +157,40 @@ index 7436323..0005eef 100644
 +second version of file1.txt
 ```
 ```git diff --cached``` 
-shows the difference between the **index** and last commit.
+shows the difference between the **index** (b) and last commit (a).
 
-```git diff``` shows the difference between **working** directory and **index**
+```git diff``` shows the difference between **working** (b)directory and **index** (a)
 
-```git diff commit``` shows the difference between working directory and a commit
-
-### Branching
-
-
-Typically, to work on a new feature in a software base we create a new branch from the main one. This way all the changes we make do not affect the supposedly "working code". But after we are done developing the new feature we would like to incorporate  the new changes back into the main part. Before we proceed we perform two commits to get three different 
-versions of file1.txt in the database.
+```git diff commit``` shows the difference between working directory (b) and a commit (a)
 ```bash
 >git commit -m "added second version of file1"
 # at this point the version in the index in the commit are the same. You can check using diff
 >git add file1.txt
 >git commit -m "added third version of file1"
 >git log --oneline
-31c7080 (HEAD -> master) added third version of file1
-6b2bfba added second version of file1
-da21bb7 added first version of file1
-6b66b6a initial commit
-```
-Simple branching example. 
-```bash
->git checkout -b dev # or git branch dev ; git checkout dev
->git log --oneline
-31c7080 (HEAD -> dev, master) added third version of file1
-6b2bfba added second version of file1
-da21bb7 added first version of file1
-6b66b6a initial commit
+292e0b7 (HEAD -> main) added third version of file1
+d0780ef added second version of file1
+2014a39 added first version of file1
+
 ```
 
+
+**Note**: you will get different values for the hashes because the hash includes the author of the commit and the timestamp (try ```git log``` to see the full information)
+
+## 2. Branching
+
+
+Typically, to work on a new feature in a software base we create a new branch from the main one. This way all the changes we make do not affect the supposedly "working code". But after we are done developing the new feature we would like to incorporate  the new changes back into the main part. Before we proceed we perform two commits to get three different versions of file1.txt in the database.
+
+A simple branching example. 
+
+```bash
+>git checkout -b dev # or git branch dev ; git checkout dev
+>git log --oneline --graph --all
+292e0b7 (HEAD -> dev, main) added third version of file1
+d0780ef added second version of file1
+2014a39 added first version of file1
+```
 Notice that in the above output HEAD is pointing to dev.
 On branch dev we add a new file: file2.txt then make a second version of file2.txt
 ```bash
@@ -198,10 +200,10 @@ On branch dev we add a new file: file2.txt then make a second version of file2.t
 >echo "second version of file2">> file2.txt
 >git commit -a -m "second version of file2"
 ```
-Now switch back to branch master and add file3.txt and then a second version of file3.txt
+Now switch back to branch main and add file3.txt and then a second version of file3.txt
 
 ```bash
->git checkout master
+>git checkout main
 >echo "first version of file3"> file3.txt
 >git add file3.txt
 >git commit -m "first version of file3"
@@ -212,20 +214,13 @@ Now switch back to branch master and add file3.txt and then a second version of 
 ![fig1](fig1.png)
 
 As you can see from the figure above we now have two divergent, but separate, branches.
-## Remote branches
-First create a local branch then push it to the remote. Example
 
-```
-git branch experimental
-git checkout experimental
-git push origin experimental
-```
-### Merging 
- Once we are satisfied with the "development" on branch dev typically we want to incorporate the changes into master. We make sure first that we are "on" branch master.
+## 3. Merging 
+ Once we are satisfied with the "development" on branch dev typically we want to incorporate the changes into master. We make sure first that we are "on" branch main.
 
 ```bash
->git checkout master
-Already on 'master'
+>git checkout main
+Already on 'main'
 >git merge dev
 ```
 A default editor will open with a default message "Merge branch 'dev'". We can change the message then save and quit.
@@ -233,30 +228,24 @@ A default editor will open with a default message "Merge branch 'dev'". We can c
 >git log --oneline --graph --all
 ```
 ![fig2](fig2.png)
-At this point branch master contains all the changes made in dev (note that file2.txt was created and modified on branch dev only)
+At this point branch main contains all the changes made in dev (note that file2.txt was created and modified on branch dev only)
 ```bash
 >ls
 file1.txt  file2.txt  file3.txt
 ```
-Suppose that we made a mistake in merging and we want to undo it. Consulting the output of the log we see that the last commit before merge was 4ef2bf5.
-```bash
->git reset --hard 4ef2bf5
->git log --oneline --graph --all
-```
-![fig1](fig1.png)
-Lets do the merge again but this time passing the message on the command line
-```bash
->git merge dev -m "Merging dev into master"
-```
 The merging operation went smoothly because we made sure not to change a file common between branches.
-If there are different versions of the same file git does not know which one to choose so it is up to us to decide.
+If there are different versions of the same file, git does not know which one to choose so it is up to us to decide. Next we will try to merge two branches where ```file2.txt``` changed in both.
+
 ```bash
+
 >git checkout dev
+>git merge main # get dev up to date with main
+>echo "added lines on dev" >> file2.txt
 >echo "changed on dev">>file2.txt
 >git commit -a -m "changed file2 on dev"
->git checkout master
->echo "changed on master">> file2.txt
->git commit -a -m "changed file2 on master"
+>git checkout main
+>echo "changed on main">> file2.txt
+>git commit -a -m "changed file2 on main"
 >git merge dev
 Auto-merging file2.txt
 CONFLICT (content): Merge conflict in file2.txt
@@ -282,18 +271,85 @@ But it also tells us where the conflict is
 >cat file2.txt
 first version of file2
 second version of file2
-changed on master
+<<<<<<< HEAD
+changed on main
+=======
+added lines on dev
 changed on dev
+>>>>>>> dev
+
 ```
-We can choose the version (or both) we want by editing the file, the committing. So after editing the file to our liking
+We can choose the version  we want (or both) by editing the file, then commit. So after editing the file to our liking, say removing the line "added lines on dev" and the separators line (with '<<<<<HEAD','=========','>>>>>>>>>>>>dev'):
 ```bash
->git commit -a -m "fixed merge conflict on file2.txt"
+>cat file2
+first version of file2
+second version of file2
+changed on main
+changed on dev
+
+>git commit -a -m "fixed merge conflict on file2"
 >git log --oneline --graph --all
 ```
 ![fig3](fig3.png)
 
-### Rebase
-Rebase allows us to change the **base** of a sequence of commits. Below we create two branches, master and dev, each with a series of commits.
+<!-- After merging, we need to keep 'dev' update to date with 'main'.
+```bash
+git checkout dev
+git merge main
+```
+Note the 'Fast-forward'. This is because,before the last merge, dev pointed to an ancestor of 'main' which means 'main' already incorporated everything in 'dev' so the dev pointer is just advanced to point to main. -->
+## 4. Undoing commits
+Suppose that we made a mistake in merging and we want to undo it. The safest way to undo commit(s) is to use ```revert```. This command will undo commits by 'creating reverse commits'.
+First let consult the graph in the previous figure and inspect the last commit before merge on the main branch.
+```bash
+>git checkout 67386a0 # git checkout main~1 is better
+>ls
+file1.txt file3.txt
+>git checkout main # go back to main
+>git revert c334280 # git revert HEAD is better
+error: commit c3342801b0dafda3697e5f42d0297df1efbfb458 is a merge but no -m option was given.
+fatal: revert failed
+```
+The error we got is due to the fact that commit c334280 has two parents so we need to specify which parent to 'revert' to.
+```bash
+>git revert -m 1 c334280 # git revert -m 1 HEAD
+>ls
+file1.txt  file2.txt  file3.txt
+>cat file2.txt
+>git log --oneline --graph --all
+```
+![img](revert.png)
+
+One can check that indeed commits 56403e0 and 67386a0 have the same snapshot by using diff ```git diff 56403e0 67386a0``` (or ```git diff HEAD main~2```)
+(**Caution**: as you can see from the above graph branch dev is now an ancestor of main so ```git checkout dev;git merge main``` will fast-forward dev to main and lose all the work done in the dev branch; i.e. file2.txt)
+
+Another way of undoing commits is to use ```reset```. When we resolved the the previous merge conflict we removed the line "added lines on dev" and kept the line "changed on dev". Suppose that was a mistake and we should have done the opposite. The problem  here is that branch dev points to a commit that is an ancestor of the commit pointed to by main, so ```git checkout dev;git merge main``` will not change the contents of file2. Instead we point main to the commit that we want, in this case to ```main~2```.
+
+(**Note**: be cautious in using reset since it alters the history, especially if you are using a remote server).
+```bash
+>git reset --hard 67386a0 (or git reset --hard main~2)
+>git log --oneline --graph --all
+```
+![fig1](fig1.png)
+Lets do the merge again, but this time  keeping "added lines on dev" and removing "changed on dev".
+
+```bash
+>git merge dev 
+Auto-merging file2.txt
+CONFLICT (content): Merge conflict in file2.txt
+Automatic merge failed; fix conflicts and then commit the result.
+# after editing as described above
+>cat file2.txt
+first version of file2
+second version of file2
+changed on main
+added lines on dev
+
+> git commit -a -m "re-fixed conflict" 
+```
+
+<!-- ## 5. Rebase
+Rebase allows us to change the **base** of a sequence of commits. We will execute the same sequence as before but use rebase instead of merge. You don't have to redo things manually, run the script ```??``` and it will get you to ???
 
 Starting from an empty working directory we do  some commits on the master branch.
 ```bash
@@ -340,22 +396,6 @@ Basically, we are telling git to use master as a base for which to add all the c
 Another way to look at it is to use master as a base for commits from 3a99d41 to dev where 3a99d41 is automatically detected by git as the common ancestor of the two branches.
 
 
-### Example
-
-Below we create two branches with a series of commits. Each commit on master includes a new file. For example, in commit "1st master" file "master1.txt" was added... and for dev commit "1st dev" file "dev1.txt" was added.
-```bash
->git log --oneline --graph --all
-```
-![fig7](fig7.png)
-
-As can be seen the sequence of commits "4th dev",...,"1st dev" has commit "3rd master" as ancestor.  We rebase it on master,i.e. "5master" becomes the new ancestor.
-```bash
-#git rebase --onto new-base old-base tip
->git --onto master 3b360f5 dev
->git log --oneline --graph --all
-```
-![fig8](fig8.png)
-
 ### Cleaning up history
 
 Sometimes the log becomes very long and we would like to get rid of the earlier commits. We can do that using rebase as follows. First we create an "orphan" branch were we want the new history to start.
@@ -388,11 +428,17 @@ git diff --name-status sha1 sha2
 
 ```
 git show ???
-```
+``` -->
 
 
-### Remote repos and Github
-To add a remote repo you need the url and give it a name
+### Remote repos and Gitlab (or Github)
+
+Go to ```https://git.soton.ac.uk```. 
+1. In the top right corner click on "New project"
+2. Choose "Create blank project"
+3. In "Project name" type "gitlab"
+4. Uncheck "Initialize repository with README" 
+
 ```
 git remote add origin URL
 ```
