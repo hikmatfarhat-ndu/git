@@ -10,7 +10,7 @@ The "create_git.ps1" file is a script that allows you to reproduce the steps in 
 Git is used to keep track of all your work that you choose to save. It does so by saving a sequence of "snapshots" or versions of your files. 
 
 A version of a file can be in one of three places as show in the figure : working directory, staging area, or git directory
-![img1](three-stages.png)
+![three-stages](three-stages.   )
 
 The working directory is just that: the files and folders that reside on your filesystem. You can view the structure and content of the working directory using file explorer.
 The staging area is a file kep by Git, stores information about what will go into your next snapshot (commit).
@@ -332,7 +332,7 @@ file1.txt  file2.txt  file3.txt
 >cat file2.txt
 >git log --oneline --graph --all
 ```
-![img](revert.png)
+![revert](revert.png)
 
 One can check that indeed commits 5493b5b and 5df7022 have the same snapshot by using diff ```git diff 5493b5b 5df7022``` (or ```git diff HEAD main~2```)
 (**Caution**: as you can see from the above graph branch dev is now an ancestor of main so ```git checkout dev;git merge main``` will fast-forward dev to main and lose all the work done in the dev branch; i.e. file2.txt)
@@ -346,7 +346,7 @@ The problem  here is that branch dev points to a commit that is an ancestor of t
 >git reset --hard 5df7022 (or git reset --hard main~2)
 >git log --oneline --graph --all
 ```
-![fig1](reset.png)
+![reset](reset.png)
 Let us do the merge again, but this time  keeping "added lines on dev" and removing "changed on dev".
 
 ```bash
@@ -470,7 +470,7 @@ At this point the remote repository has no branches. We made sure of that by "un
 ```
 The "-u" option is done once at the beginning, and it is short for "--set-upstream". "push" pushes the local changes to the upstream repository.
 Next go to ```https://git.soton.ac.uk/username/gitlab``` and create a new file "file4.txt" as shown below:
-![img](gitlab1.png). 
+![gitlab1](gitlab1.png). 
 
 Write "First version of file4" in the file and scroll all the way to the bottom and write "added file4.txt" in the "Commit message" and press "Commit changes".
 Now the remote branch main has an extra file. To synchronise the local branch
@@ -605,7 +605,7 @@ at this point we check the progress and we see that the two development branches
 ```bash
 >git log --oneline --graph --all
 ```
-![img1](diverge.png)
+![diverge](diverge.png)
 
 To incorporate the changes we merge the two branches into dev.
 ```bash
@@ -633,7 +633,7 @@ You can edit the above the way you like but in this case we want to keep both ch
 >git commit -m "merged feature1 and feature2"
 ```
 A second way to do the merge is by using your IDE. For example, after the second merge command, open ```leaderboard.py``` in PyCharm and click the button at the top right corner "resolve conflicts" which will open a window with 3 panes as shown below.
-![img](resolve-conflicts.png)
+![resolve-conflicts](resolve-conflicts.png)
 You can choose to add or remove the parts which are different. In our case we need to add both so press on ">>" on both left and right panes and press "apply". Finally
 ```bash
 >git commit -m "merged feature1 and feature2"

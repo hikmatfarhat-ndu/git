@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCod*{font-size: 18px;}e > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } 
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+    code span.at { color: #7d9029; } 
+    code span.bn { color: #40a070; } 
+    code span.bu { } 
+    code span.cf { color: #007020; font-weight: bold; } 
+    code span.ch { color: #4070a0; } 
+    code span.cn { color: #880000; }
+    code span.co { color: #60a0b0; font-style: italic; } 
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+    code span.do { color: #ba2121; font-style: italic; } 
+    code span.dt { color: #902000; } 
+    code span.dv { color: #40a070; } 
+    code span.er { color: #ff0000; font-weight: bold; } 
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } 
+    code span.fu { color: #06287e; } 
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+    code span.kw { color: #007020; font-weight: bold; } 
+    code span.op { color: #666666; } 
+    code span.ot { color: #007020; } 
+    code span.pp { color: #bc7a00; } 
+    code span.sc { color: #4070a0; } 
+    code span.ss { color: #bb6688; } 
+    code span.st { color: #4070a0; } 
+    code span.va { color: #19177c; } 
+    code span.vs { color: #4070a0; } 
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+  </style>
+</head>
+<body>
+<h1 id="git">GIT</h1>
+<p>To start with create two sibling directories (folders) named “git” and “git-tmp”. You will do all the work in “git-tmp”. Download this <a href="https://raw.githubusercontent.com/hikmatfarhat-ndu/git/refs/heads/main/create_git.ps1">file</a> (make sure the extension is .ps1) and save it in folder “git”. The “create_git.ps1” file is a script that allows you to reproduce the steps in case you made a mistake. For example, if you want to execute all the steps up to and including section 3 (note the dot at the beginning).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">.</span> <span class="ex">create_git.ps1</span> -checkpoint 3</span></code></pre></div>
+<h2 id="basics">1. Basics</h2>
+<p>Git is used to keep track of all your work that you choose to save. It does so by saving a sequence of “snapshots” or versions of your files.</p>
+<p>A version of a file can be in one of three places as show in the figure : working directory, staging area, or git directory <img src="three-stages.png" alt="three-stages" /></p>
+<p>The working directory is just that: the files and folders that reside on your filesystem. You can view the structure and content of the working directory using file explorer. The staging area is a file kep by Git, stores information about what will go into your next snapshot (commit). The git directory contains a complete history of all your saved(committed) snapshots and relation between them.</p>
+<p>The figure also shows the typical commands that are used to move a version of a file between the three stages. It should be noted that in the working directory and staging area there could be only one version of a given file. The Git directory, however, can contain multiple versions of the file.</p>
+<p>The working directory contains the files that you are working on. The staging area contains contains information on what <strong>will be</strong> in the next commit. A typical workflow would be: 1. Modify files in the working directory 2. “add” the modified files to the staging area 3. “commit” the files in the staging area to the local git repository (directory)</p>
+<!-- ### 1.1 Initialization -->
+<p>Typically there are two ways to start version control on a directory. The first is initializing the directory to be under version control.</p>
+<p>We start with an example. Open a terminal and <code>cd</code> (change directory) to folder “git-tmp”.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> init</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="ex">On</span> branch main</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="ex">No</span> commits yet</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="ex">nothing</span> to commit (create/copy files and use <span class="st">&quot;git add&quot;</span> to track)</span></code></pre></div>
+<p><strong>Note</strong>: depending on the version of git the initial branch could be called “master” instead of “main”. If this is the case change its name to “main” using <code>git branch -m main</code>. Now create a new file, <code>file1.txt</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;first version of file1&quot;</span> <span class="op">&gt;</span> file1.txt</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="ex">fatal</span>: your current branch <span class="st">&#39;main&#39;</span> does not have any commits yet</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="ex">On</span> branch main</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="ex">No</span> commits yet</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="ex">Untracked</span> files:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git add &lt;file&gt;...&quot;</span> to include in what will be committed<span class="kw">)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>        <span class="ex">file1.txt</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="ex">nothing</span> added to commit but untracked files present (use <span class="st">&quot;git add&quot;</span> to track)</span></code></pre></div>
+<p>At this point file1.txt is newly added to the working directory, so it is untracked. To start tracking it, we add it to the index using the <strong>add</strong> command.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add file1.txt</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="ex">On</span> branch main</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="ex">No</span> commits yet</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="ex">Changes</span> to be committed:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git rm --cached &lt;file&gt;...&quot;</span> to unstage<span class="kw">)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>        <span class="ex">new</span> file:   file1.txt</span></code></pre></div>
+<p>So now there are two (identical) copies of file1.txt, in the <strong>working</strong> directory and in the <strong>index</strong>. If we make changes to file1.txt they will affect the one in the <strong>working</strong> directory only. Edit “file1.txt”, by adding the line “second version of file1”. (<strong>note</strong> the difference between <code>&gt;</code>, overwrite, and <code>&gt;&gt;</code>, append )</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;second version of file1&quot;</span><span class="op">&gt;&gt;</span>file1.txt</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="ex">On</span> branch main</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="ex">No</span> commits yet</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="ex">Changes</span> to be committed:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git rm --cached &lt;file&gt;...&quot;</span> to unstage<span class="kw">)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>        <span class="ex">new</span> file:   file1.txt</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="ex">Changes</span> not staged for commit:</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git add &lt;file&gt;...&quot;</span> to update what will be committed<span class="kw">)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git restore &lt;file&gt;...&quot;</span> to discard changes in working directory<span class="kw">)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>        <span class="ex">modified</span>:   file1.txt</span></code></pre></div>
+<p>At this point the version in the <strong>working</strong> directory and the <strong>index</strong> are different. We can either add the second version to the <strong>index</strong>, then <strong>commit</strong>, or restore the version in the index (that contains one line only) to the working directory. Let us try the last option.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file1.txt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="ex">first</span> version of file1</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="ex">second</span> version of file1</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> restore file1.txt</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="ex">On</span> branch mains</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="ex">No</span> commits yet</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="ex">Changes</span> to be committed:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git rm --cached &lt;file&gt;...&quot;</span> to unstage<span class="kw">)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>        <span class="ex">new</span> file:   file1.txt</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file1.txt</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a><span class="ex">first</span> version of file1</span></code></pre></div>
+<p>Our next action is to commit the content of the <strong>index</strong> (staging area).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;added first version of file1&quot;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="ex">On</span> branch main</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="ex">nothing</span> to commit, working tree clean</span></code></pre></div>
+<p>Next we add the line “second version of text1” to file1.txt, add it to the index then add “third version” to file1.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;second version of file1&quot;</span><span class="op">&gt;&gt;</span> file1.txt</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add file1.txt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;third version of file1&quot;</span><span class="op">&gt;&gt;</span> file1.txt</span></code></pre></div>
+<p>At this point we have <strong>three</strong> versions of file1.txt: - one in the working directory (3 lines) - one in the index (2 lines) - one was committed (1 line)</p>
+<p>We can compare the difference between the three versions using the <strong>diff</strong> command. First we show the difference between working tree and index.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> diff</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="fu">diff</span> --git a/file1.txt b/file1.txt</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="ex">index</span> 0005eef..73c2f46 100644</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a><span class="ex">---</span> a/file1.txt</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="ex">+++</span> b/file1.txt</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="ex">@@</span> -1,2 +1,3 @@</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a> <span class="ex">first</span> version of file1.txt</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a> <span class="ex">second</span> version of file1.txt</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a><span class="ex">+third</span> version of file1.txt</span></code></pre></div>
+<p>The above says that the version in the working tree (b) has an extra line “third version of file1.txt” which doesn’t exist in the index (a). In general, a line preceded with ‘-’ means it is in <code>a</code> but not in <code>b</code> and ‘+’ it is in <code>b</code> not in <code>a</code>. We can also show the difference between working tree (b) and the last commit (a).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> diff HEAD <span class="co">#or git diff master or main </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>               <span class="co"># depending on the name of the branch</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="fu">diff</span> --git a/file1.txt b/file1.txt</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="ex">index</span> 7436323..73c2f46 100644</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a><span class="ex">---</span> a/file1.txt</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="ex">+++</span> b/file1.txt</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="ex">@@</span> -1 +1,3 @@</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a> <span class="ex">first</span> version of file1.txt</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a><span class="ex">+second</span> version of file1.txt</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a><span class="ex">+third</span> version of file1.txt</span></code></pre></div>
+<p>Finally, we can show the difference between the index (b) and the last commit (a) (or any specified commit)</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> diff --cached </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="fu">diff</span> --git a/file1.txt b/file1.txt</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="ex">index</span> 7436323..0005eef 100644</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="ex">---</span> a/file1.txt</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a><span class="ex">+++</span> b/file1.txt</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="ex">@@</span> -1 +1,2 @@</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a> <span class="ex">first</span> version of file1.txt</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true"></a><span class="ex">+second</span> version of file1.txt</span></code></pre></div>
+<p><code>git diff --cached</code> shows the difference between the <strong>index</strong> (b) and last commit (a).</p>
+<p><code>git diff</code> shows the difference between <strong>working directory</strong> (b) and <strong>index</strong> (a)</p>
+<p><code>git diff commit</code> shows the difference between working directory (b) and a commit (a)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;added second version of file1&quot;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="co"># at this point the version in the index and the commit are the same. You can check using diff</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add file1.txt</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;added third version of file1&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a><span class="ex">*</span> 99365ba (HEAD -<span class="op">&gt;</span> main) <span class="ex">added</span> third verison of file1</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a><span class="ex">*</span> 880be99 added second versio of file1</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a><span class="ex">*</span> d039f56 added first version of file1</span></code></pre></div>
+<p><strong>Note</strong>: you will get different values for the hashes because the hash includes the author of the commit and the timestamp (try <code>git log</code> to see the full information)</p>
+<h2 id="branching">2. Branching</h2>
+<p>Typically, to work on a new feature in a software base we create a new branch from the main one. This way all the changes we make do not affect the supposedly “working code”. But after we are done developing the new feature, we would like to incorporate the new changes back into the main part.</p>
+<!-- Before we proceed we perform two commits to get three different versions of file1.txt in the database. -->
+<p>A simple branching example.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout -b dev <span class="co"># or git branch dev ; git checkout dev</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="ex">*</span> 99365ba (HEAD -<span class="op">&gt;</span> dev, main) <span class="ex">added</span> third verison of file1</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a><span class="ex">*</span> 880be99 added second versio of file1</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="ex">*</span> d039f56 added first version of file1</span></code></pre></div>
+<p>Notice that in the above output HEAD is pointing to dev. On branch dev we add a new file: file2.txt then make a second version of file2.txt.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;first version of file2&quot;</span><span class="op">&gt;</span> file2.txt</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add file2.txt</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;first version of file2&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;second version of file2&quot;</span><span class="op">&gt;&gt;</span> file2.txt</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;second version of file2&quot;</span></span></code></pre></div>
+<p>Now switch back to branch main and add file3.txt and then a second version of file3.txt</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;first version of file3&quot;</span><span class="op">&gt;</span> file3.txt</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add file3.txt</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;first version of file3&quot;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;second version of file3&quot;</span><span class="op">&gt;&gt;</span> file3.txt</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;second version of file3&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline -graph --all</span></code></pre></div>
+<figure>
+<img src="fig1.png" alt="" /><figcaption>fig1</figcaption>
+</figure>
+<p>As you can see from the figure above we now have two <strong>divergent</strong>, but separate, branches.</p>
+<h2 id="merging">3. Merging</h2>
+<p>Once we are satisfied with the “development” on branch <strong>dev</strong> typically we want to incorporate the changes into master. We make sure first that we are “on” branch main.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="ex">Already</span> on <span class="st">&#39;main&#39;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> merge dev</span></code></pre></div>
+<p>A default editor will open with a default message “Merge branch ‘dev’”. We can change the message then save and quit.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<p><img src="fig2.png" alt="fig2" /> At this point branch main contains all the changes made in dev (note that file2.txt was created and modified on branch dev only)</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">ls</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="ex">file1.txt</span>  file2.txt  file3.txt</span></code></pre></div>
+<p>The merging operation went smoothly because we made sure not to change a file common between branches. If there are different versions of the same file, git does not know which one to choose so it is up to us to decide. Next we will try to merge two branches where <code>file2.txt</code> changed in both. But first, we get <strong>dev</strong> up to date with <strong>main</strong>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout dev</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> merge main <span class="co"># get dev up to date with main</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;added lines on dev&quot;</span> <span class="op">&gt;&gt;</span> file2.txt</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;changed on dev&quot;</span><span class="op">&gt;&gt;</span>file2.txt</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;changed file2 on dev&quot;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true"></a><span class="op">&gt;</span><span class="bu">echo</span> <span class="st">&quot;changed on main&quot;</span><span class="op">&gt;&gt;</span> file2.txt</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;changed file2 on main&quot;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> merge dev</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true"></a><span class="ex">Auto-merging</span> file2.txt</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true"></a><span class="ex">CONFLICT</span> (content)<span class="bu">:</span> Merge conflict in file2.txt</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true"></a><span class="ex">Automatic</span> merge failed<span class="kw">;</span> <span class="ex">fix</span> conflicts and then commit the result.</span></code></pre></div>
+<p>git is telling us that it cannot perform the merge because there is a conflict between the two versions.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> status</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="ex">On</span> branch master</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a><span class="ex">You</span> have unmerged paths.</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">fix</span> conflicts and run <span class="st">&quot;git commit&quot;</span><span class="kw">)</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git merge --abort&quot;</span> to abort the merge<span class="kw">)</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true"></a><span class="ex">Unmerged</span> paths:</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git add &lt;file&gt;...&quot;</span> to mark resolution<span class="kw">)</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true"></a>        <span class="ex">both</span> modified:   file2.txt</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true"></a><span class="ex">no</span> changes added to commit (use <span class="st">&quot;git add&quot;</span> and/or <span class="st">&quot;git commit -a&quot;</span>)</span></code></pre></div>
+<p>But it also tells us where the conflict is</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file2.txt</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="ex">first</span> version of file2</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a><span class="ex">second</span> version of file2</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="op">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> <span class="ex">HEAD</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a><span class="ex">changed</span> on main</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a>=======</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a><span class="ex">added</span> lines on dev</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a><span class="ex">changed</span> on dev</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a><span class="op">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> <span class="ex">dev</span></span></code></pre></div>
+<p>The part between <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;HEAD</code> and <code>=======</code> is in <strong>main</strong> but not in <strong>dev</strong> and between <code>=======</code> and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;dev</code> is in <strong>dev</strong> but not in <strong>main</strong>.</p>
+<p>We can choose the version we want (or both) by editing the file, then commit. So after editing the file to our liking, say removing the line “added lines on dev” and the separator lines (with ‘&lt;&lt;&lt;&lt;&lt;HEAD’,‘=========’,‘&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;dev’):</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file2</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="ex">first</span> version of file2</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="ex">second</span> version of file2</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a><span class="ex">changed</span> on main</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a><span class="ex">changed</span> on dev</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;fixed merge conflict on file2&quot;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<figure>
+<img src="fig3.png" alt="" /><figcaption>fig3</figcaption>
+</figure>
+<!-- After merging, we need to keep 'dev' update to date with 'main'.
+```bash
+git checkout dev
+git merge main
+```
+Note the 'Fast-forward'. This is because,before the last merge, dev pointed to an ancestor of 'main' which means 'main' already incorporated everything in 'dev' so the dev pointer is just advanced to point to main. -->
+<h2 id="undoing-commits">4. Undoing commits</h2>
+<p>Suppose that we made a mistake in merging and we want to undo it. The safest way to undo commit(s) is to use <code>revert</code>. This command will undo commits by ‘creating reverse commits’.</p>
+<p>First we can inspect the content of <code>file2.txt</code> before the merge. Using the above graph we see that the last commit, on <strong>main</strong>, before merge is bbaf50b (or <code>main~1</code>)</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout bbaf50b <span class="co"># git checkout main~1 is better</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file2.txt</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a><span class="ex">first</span> version of file2</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a><span class="ex">second</span> version of file2</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a><span class="ex">changed</span> on main</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main <span class="co"># go back to main</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> revert 65bf415 <span class="co"># git revert HEAD is better</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a><span class="ex">error</span>: commit 65bf4151ecc93d15da13d9f01cef52341e9021d2 is a merge but no -m option was given.</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a><span class="ex">fatal</span>: revert failed</span></code></pre></div>
+<p>The error we got is due to the fact that commit 7669ca2 has two parents, so we need to specify which parent to ‘revert’ to.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> revert -m 1 7669ca2 <span class="co"># git revert -m 1 HEAD</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">ls</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="ex">file1.txt</span>  file2.txt  file3.txt</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file2.txt</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<figure>
+<img src="revert.png" alt="" /><figcaption>revert</figcaption>
+</figure>
+<p>One can check that indeed commits 5493b5b and 5df7022 have the same snapshot by using diff <code>git diff 5493b5b 5df7022</code> (or <code>git diff HEAD main~2</code>) (<strong>Caution</strong>: as you can see from the above graph branch dev is now an ancestor of main so <code>git checkout dev;git merge main</code> will fast-forward dev to main and lose all the work done in the dev branch; i.e. file2.txt)</p>
+<p>Another way of undoing commits is to use <code>reset</code>. When we resolved the the previous merge conflict we removed the line “added lines on dev” and kept the line “changed on dev”. Suppose that it was a mistake and we should have done the opposite.</p>
+<p>The problem here is that branch dev points to a commit that is an ancestor of the commit pointed to by main, so <code>git checkout dev;git merge main</code> will not change the contents of file2. Instead we point main to the commit that we want, in this case to <code>main~2</code>.</p>
+<p>(<strong>Note</strong>: be cautious in using reset since it alters the history, especially if you are using a remote server).</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> reset --hard 5df7022 (or git reset --hard main~2)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<p><img src="reset.png" alt="reset" /> Let us do the merge again, but this time keeping “added lines on dev” and removing “changed on dev”.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> merge dev </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a><span class="ex">Auto-merging</span> file2.txt</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a><span class="ex">CONFLICT</span> (content)<span class="bu">:</span> Merge conflict in file2.txt</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a><span class="ex">Automatic</span> merge failed<span class="kw">;</span> <span class="ex">fix</span> conflicts and then commit the result.</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a><span class="co"># after editing as described above</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">cat</span> file2.txt</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a><span class="ex">first</span> version of file2</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a><span class="ex">second</span> version of file2</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true"></a><span class="ex">changed</span> on main</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true"></a><span class="ex">added</span> lines on dev</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true"></a><span class="op">&gt;</span> <span class="fu">git</span> commit -a -m <span class="st">&quot;re-fixed conflict&quot;</span> </span></code></pre></div>
+<!-- ## 5. Rebase
+Rebase allows us to change the **base** of a sequence of commits. We will execute the same sequence as before but use rebase instead of merge. You don't have to redo things manually, run the script ```??``` and it will get you to ???
+
+Starting from an empty working directory we do  some commits on the master branch.
+```bash
+>echo "first line">file1.txt
+>git init
+>git add file1.txt
+>git commit -m "1st master"
+>echo "second line">>file1.txt
+>git commit -a -m "2nd master"
+>echo "third line">>file1.txt
+>git commit -a -m "3rd master"
+>git log --oneline
+
+```
+The commit history will look something like this.
+![fig4](fig4.png)
+Then we create a **dev** branch and add some commits to it.
+
+```bash
+>git checkout -b dev
+>echo "file2">>file2.txt
+>git add file2.txt
+>git commit -m "1st dev"
+```
+Then switch back to master and add some commits.
+```bash
+>git checkout master
+>echo "4th line">>file1.txt
+>git commit -a -m "4th master"
+>echo "5th line">>file1.txt
+>git commit -a -m "5th master"
+```
+The history will look something like this.
+![fig5](fig5.png)
+
+The common  ancestor of both branches is the commit 3a99d41 which as far as git is concerned is the **base** of branch dev.
+```bash
+>git checkout dev
+>git rebase master
+>git log --oneline --graph --all
+```
+![fig6](fig6.png)
+Basically, we are telling git to use master as a base for which to add all the commits of the dev branch since it branched out from master.
+Another way to look at it is to use master as a base for commits from 3a99d41 to dev where 3a99d41 is automatically detected by git as the common ancestor of the two branches.
+
+
+### Cleaning up history
+
+Sometimes the log becomes very long and we would like to get rid of the earlier commits. We can do that using rebase as follows. First we create an "orphan" branch were we want the new history to start.
+First we remove the dev branch.
+```bash
+>git branch -D dev
+```
+Then 
+```bash
+>git checkout --orphan temp 3b360f5
+>git commit -m "new initial commit"
+```
+Next we rebase the sequence of commits 3b360f5 to master from the new orphan branch
+```bash
+>git rebase --onto temp 3b360f5 master
+>git log --oneline --graph --all
+```
+![fig9](fig9.png)
+
+
+### FIX ME
+```
+git diff --name-only sha1 sha2
+```
+
+```
+git diff --name-status sha1 sha2
+
+```
+
+```
+git show ???
+``` -->
+<h2 id="remote-repos-and-gitlab-or-github">5. Remote repos and Gitlab (or Github)</h2>
+<p>Go to <code>https://git.soton.ac.uk</code>. 1. In the top right corner click on “New project” 2. Choose “Create blank project” 3. In “Project name” type “gitlab” 4. Uncheck “Initialize repository with README”</p>
+<p>Next we want to inform git of the remote repository</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="fu">git</span> remote add origin URL</span></code></pre></div>
+<p>Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form <code>https://git.soton.ac.uk/username/gitlab</code></p>
+<p>At this point the remote repository has no branches. We made sure of that by “unchecking” the “Initialize repository with README”. Next we want to setup remote branches to be tracked by the local ones.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> push -u origin main</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout dev </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> push -u origin dev</span></code></pre></div>
+<p>The “-u” option is done once at the beginning, and it is short for “–set-upstream”. “push” pushes the local changes to the upstream repository. Next go to <code>https://git.soton.ac.uk/username/gitlab</code> and create a new file “file4.txt” as shown below: <img src="gitlab1.png" alt="gitlab1" />.</p>
+<p>Write “First version of file4” in the file and scroll all the way to the bottom and write “added file4.txt” in the “Commit message” and press “Commit changes”. Now the remote branch main has an extra file. To synchronise the local branch</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> pull</span></code></pre></div>
+<p>The command <code>pull</code> is a combination of <code>fetch</code> and, if the current branch is behind the remote, <code>merge</code>. Since the current local branch is <code>dev</code> then <code>pull</code> will execute <code>fetch</code> only.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a><span class="ex">Switched</span> to branch <span class="st">&#39;main&#39;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a><span class="ex">Your</span> branch is behind <span class="st">&#39;origin/main&#39;</span> by 1 commit, and can be fast-forwarded.</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>  <span class="kw">(</span><span class="ex">use</span> <span class="st">&quot;git pull&quot;</span> to update your local branch<span class="kw">)</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> pull</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a><span class="ex">Updating</span> 2a3a647..cf792f5</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a><span class="ex">Fast-forward</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a> <span class="ex">file4.txt</span> <span class="kw">|</span> <span class="ex">1</span> +</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true"></a> <span class="ex">1</span> file changed, 1 insertion(+)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true"></a> <span class="ex">create</span> mode 100644 file4.txt</span></code></pre></div>
+<!-- 
+To fetch the info about the remote 
+```bash
+git fetch origin
+```
+
+to associate an existing local branch with remote
+```bash
+git branch --set-uptream-to=origin/branch-name local-branch-name
+```
+
+If we have a local branch, say ```someBranch```, that doesn't exist in the remote, and we want to add it
+with a different name, say ```anotherName```
+
+```bash
+git push --set-upstream origin anotherName
+
+``` -->
+<h2 id="real-sort-of-programming-example">6. Real (sort of) programming example</h2>
+<p>In this example we will simulate how you would go about developing the solution for one of your labs (Leaderboard). First remove all the files/folders from the current directory “git-tmp”.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="ex">Remove-Item</span> -Force -Recurse *</span></code></pre></div>
+<p>Next we initialise the repository by adding <code>init_leaderboard</code> and <code>add_player</code> functions. Create <code>leaderboard.py</code> and copy the code below into it.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="im">from</span> datetime <span class="im">import</span> datetime,timedelta</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a><span class="kw">def</span> init_leaderboard()<span class="op">-&gt;</span><span class="bu">dict</span>[<span class="bu">str</span>,timedelta]:</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>    <span class="cf">return</span> {}</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true"></a><span class="kw">def</span> add_player(leaderboard:<span class="bu">dict</span>[<span class="bu">str</span>,timedelta],player_name:<span class="bu">str</span>)<span class="op">-&gt;</span><span class="bu">bool</span>:</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true"></a>    <span class="cf">if</span> player_name <span class="kw">in</span> leaderboard:</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true"></a>    leaderboard.update({player_name:<span class="va">None</span>})</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true"></a>    <span class="cf">return</span> <span class="va">True</span></span></code></pre></div>
+<p>and save. PyCharm and Python create a <code>.idea</code> and a <code>__pychache</code> folders respectively. We don’t want to add those folders to git so create a <code>.gitignore</code> file containing</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a><span class="ex">.idea</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="ex">__pycache__</span></span></code></pre></div>
+<p>Now commit the first version to the repo.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> init</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add leaderboard.py .gitignore</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;implemented init and add_player&quot;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout -b dev</span></code></pre></div>
+<p>Go to <code>git.soton.ac.uk</code> and create a new repository called <code>leaderboard</code> (make sure you don’t initialise it with README).</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> remote add origing https://git.soton.ac.uk/username/leaderboard</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout main</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> push -u origin main</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout dev</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> push -u origin dev</span></code></pre></div>
+<p><strong>Note</strong>: it is important to push main first. The first branch is considered as default.</p>
+<p>Next, “two of our developers” will implement <code>add_run</code> and <code>clear_score</code>. Towards that end, each developer creates a different branch</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> branch -c feature1</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> branch -c feature2</span></code></pre></div>
+<p><strong>Note</strong>: Each developer works on their local computer and since the feature branches will be deleted later it is possible for both branches to have the same name “feature” since they are on different computer and will not be uploaded to the remote server. For now, since we are “simulating” this workflow on the same computer we give the two branches different names.</p>
+<p>The “first developer” works on <code>add_run</code></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout feature1</span></code></pre></div>
+<p>copy the code below to <code>leaderboard.py</code></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a><span class="kw">def</span> add_run(leaderboard:<span class="bu">dict</span>[<span class="bu">str</span>,timedelta],player_name:<span class="bu">str</span>,time:timedelta)<span class="op">-&gt;</span><span class="bu">int</span>:</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true"></a>    <span class="cf">if</span> time.total_seconds()<span class="op">&lt;</span><span class="dv">0</span>:</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true"></a>    <span class="cf">if</span> player_name <span class="kw">not</span> <span class="kw">in</span> leaderboard:</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true"></a>        <span class="cf">return</span> <span class="dv">2</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true"></a>    </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true"></a>    <span class="cf">if</span> leaderboard[player_name]<span class="op">==</span><span class="va">None</span> <span class="kw">or</span> leaderboard[player_name]<span class="op">&gt;</span> time:</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true"></a>        leaderboard.update({player_name:time})</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true"></a>    <span class="cf">return</span> <span class="dv">0</span></span></code></pre></div>
+<p>Save the file and</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;implemented add_run&quot;</span></span></code></pre></div>
+<p>The “second developer” uses the feature2 branch.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout feature2</span></code></pre></div>
+<p>copy the code below to <code>leaderboard.py</code></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a><span class="kw">def</span> clear_score(leaderboard,player_name):</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>    <span class="cf">if</span> player_name <span class="kw">not</span> <span class="kw">in</span> leaderboard:</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a>    leaderboard.update({player_name:<span class="va">None</span>})</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a>    <span class="cf">return</span> <span class="va">True</span></span></code></pre></div>
+<p>Save the file and</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -a -m <span class="st">&quot;implemented clear_score&quot;</span></span></code></pre></div>
+<p>at this point we check the progress and we see that the two development branches have diverged</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<figure>
+<img src="diverge.png" alt="" /><figcaption>diverge</figcaption>
+</figure>
+<p>To incorporate the changes we merge the two branches into dev.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> checkout dev</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> merge feature1</span></code></pre></div>
+<p>Next we incorporate the changes from feature2. This will cause a merge conflict.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> merge feature2</span></code></pre></div>
+<p>You can fix the merge conflict either by editing the code in <code>leaderboard.py</code> directly. When you open <code>leaderboard.py</code> in any editor you will see something like this:</p>
+<pre><code>...
+...
+&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;HEAD
+content in main but not in dev2
+=======
+content in dev2 but not in main
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature2
+</code></pre>
+<p>You can edit the above the way you like but in this case we want to keep both changes so all we have to do is remove the lines containing “&lt;&lt;&lt;&lt;&lt;&lt;”, “&gt;&gt;&gt;&gt;&gt;&gt;” and “=======” and save the file.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> add leaderboard.py</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;merged feature1 and feature2&quot;</span></span></code></pre></div>
+<p>A second way to do the merge is by using your IDE. For example, after the second merge command, open <code>leaderboard.py</code> in PyCharm and click the button at the top right corner “resolve conflicts” which will open a window with 3 panes as shown below. <img src="resolve-conflicts.png" alt="resolve-conflicts" /> You can choose to add or remove the parts which are different. In our case we need to add both so press on “&gt;&gt;” on both left and right panes and press “apply”. Finally</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> commit -m <span class="st">&quot;merged feature1 and feature2&quot;</span></span></code></pre></div>
+<p>The branches <code>feature1</code> and <code>feature2</code> are local branches so there is no need to keep them.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> branch -D feature1</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> branch -D feature2</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true"></a><span class="op">&gt;</span><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<p>To update the remote <strong>dev</strong> branch</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a><span class="fu">git</span> push</span></code></pre></div>
+<p>Now go to <code>https://git.soton.ac.uk/username/leaderboard</code> (refresh if necessary). On the top of the page, press the “Create merge request”. - In the “Title” write “new features” - In the “Description” write “implemented add_run and clear_score”. - Uncheck the “Delete source branch…” at the bottom - Press “Create merge request”. (<strong>note</strong>: sometimes it is called “pull request”)</p>
+<p>The above created a request to merge the changes in <strong>dev</strong> into the <strong>main</strong> branch. In a real software project, the team leader needs to approve what goes into <strong>main</strong> branch. This is why you see a new page with “Approve” button. In this case it is optional.</p>
+<p>Uncheck “Delete source branch” and press “Merge”. Finally, we update our local repository</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true"></a><span class="fu">git</span> checkout main</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true"></a><span class="fu">git</span> pull</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true"></a><span class="fu">git</span> checkout dev</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true"></a><span class="fu">git</span> merge main <span class="co"># keep dev up to date with main</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true"></a><span class="fu">git</span> push <span class="co"># keep remote dev up to  date with main</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true"></a><span class="fu">git</span> log --oneline --graph --all</span></code></pre></div>
+<!-- 
+Now developer 1 is tasked with implementing ```display_leaderboar```. First we need to bring branch ```dev``` in line with ```main```.
+
+```bash
+git checkout dev
+git merge main
+```
+Copy the code below to ```leaderboard.py```.
+```python
+
+def display_leaderboard(leaderboard,n=3):
+    
+    lst=sorted(leaderboard.items(),key=lambda x:x[1])
+    r=min(n,len(lst))
+    count=0
+    
+    for i in range(r):
+        if lst[i][1] is not None:
+            print(f'{i+1}\t{lst[i][0]}\t{lst[i][1]}')
+            count+=1
+    if count==0:
+        print("Leaderboard is empty")
+```
+```bash
+git commit -a -m "implemented display"
+git log --oneline --graph --all
+```
+
+![img](amend1.png)
+Usually it is best to run some tests before committing, which we forgot to do. Add the following code
+```python
+lb=init_leaderboard()
+add_player(lb,player_name='Jon')
+add_player(lb,player_name='Chris')
+add_run(lb,player_name='Jon',time=timedelta(minutes=47))
+add_run(lb,player_name='Chris',time=timedelta(minutes=18))
+add_run(lb,player_name='Jon',time=timedelta(minutes=23))
+display_leaderboard(lb)
+
+```
+We don't want to add an extra commit but replace the last one, so
+```bash
+git add leaderboard.py
+git commit --amend -m "implemented display with tests"
+```
+![img](amend2.png)
+Notice how the new commit replaced the last one. The hash is different because the message is different.
+
+We have a (almost) working code.
+This development phase is done so we delete the dev branches
+```bash
+git branch -D dev1
+git branch -D dev2
+```
+
+
+
+A problem occurs if a player has no run (None). For example, if we add a player "Jack" without any run we get an error when ```display_leaderboard``` is called. This is caused by the ```sorted``` function since ```None``` is not comparable.
+```python
+lb=init_leaderboard()
+add_player(lb,player_name='Jon')
+add_player(lb,player_name='Chris')
+add_player(lb,player_name='Jack')
+add_run(lb,player_name='Jon',time=timedelta(minutes=47))
+add_run(lb,player_name='Chris',time=timedelta(minutes=18))
+add_run(lb,player_name='Jon',time=timedelta(minutes=23))
+display_leaderboard(lb)
+```
+A quick fix is to replace
+```python
+lst = sorted(leaderboard.items(), key=lambda x: x[1])
+```
+by
+```python
+    lst = sorted(leaderboard.items(), key=lambda x: (x[1] is None, x[1]))
+```
+For bug fixes we usually create a new branch. ```git switch -c fix``` then replace the code as above and
+```bash
+git commit -a -m "fixed sorted"
+git checkout main
+git merge fix
+git branch -D fix
+git log --oneline --graph --all
+```
+![img](fix1.png)
+We can compare the fix with the previous commit
+```bash
+git diff  69c0705 c75dd7e
+```
+![img](fix2.png)
+
+
+Finally, we push the changes to the remote
+```bash
+git push -u origin main
+``` -->
+</body>
+</html>
