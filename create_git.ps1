@@ -74,9 +74,7 @@ cat file2.txt
 echo "--------------------"
 
 git checkout main
-git revert HEAD
-git revert -m 1 HEAD
-ls
+git revert HEADdev2
 git log --oneline --graph --all
 git diff HEAD main~2
 
