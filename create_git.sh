@@ -1,9 +1,13 @@
-param([string] $checkpoint)
-$checkpoint=[int]$checkpoint
-#sed '/\(^<.*$\|^>.*$\|^=.*$\)/d' file1.txt 
+#!/bin/bash
 # Basics
+if [ $# = 0 ]
+then
+ echo "usage: create_git.sh checkpoint"
+ exit
+fi
 cd ../git-tmp
-remove-item -Force -Recurse *
+shopt -s dotglob
+rm -rf *
 git init
 git config advice.detachedHead false
 echo "first version of file1" >file1.txt
@@ -18,9 +22,10 @@ git commit -m "added second versio of file1"
 git add file1.txt
 git commit -m "added third verison of file1"
 git log --oneline --graph --all
-if ($checkpoint -eq 1){
-    Return
-}
+if [ $1 = 1 ]; then
+   exit
+fi
+
 # Branching
 git checkout -b dev 
 git log --oneline --graph --all
@@ -36,9 +41,10 @@ git commit -m "first version of file3"
 echo "second version of file3" >>file3.txt
 git commit -a -m "second version of file3"
 git log --oneline --graph --all
-if($checkpoint -eq 2){
-    Return
-}
+if [ $1 = 2 ]
+then
+    exit
+fi
 # Merging
 git checkout maincheckpoint
 git merge dev
@@ -56,20 +62,17 @@ git checkout main
 echo "changed on main" >> file2.txt
 git commit -a -m "changed file2 on main"    
 git merge dev
-$text=Get-Content file2.txt
-cat file2.txt
-$text[0..($text.count -2)]|Where-Object {$_ -notmatch "(^<)|(^>)|(^=)|(added)"}>file2.txt
-
-# get-content ./file2.txt |Where-Object{$_ -notmatch '<|>|='}| Set-Content file2.txt
-git commit -a -m "fixed merge conflict on file2.txt"
+sed '/^<\|^>\|^=\|^added/d' file2.txt > tmp
+mv -f tmp file2.txt
+git commit -a -m "fixed merge conflict on file2.text"
 git log --oneline --graph --all
-if($checkpoint -eq 3){
-    Return
-}
+if [ $1 = 3 ]
+then
+    exit
+fi
 
 # undoing commits
 git checkout main~1
-ls
 echo "---cat file2.txt---"
 cat file2.txt
 echo "--------------------"
@@ -84,62 +87,76 @@ git diff HEAD main~2
 ## reset
 git reset --hard main~2
 git merge dev
+sed '/^<\|^>\|^=\|^c.*v$/d' file2.txt >tmp
+mv -f tmp file2.txt
+cat file2.txt
+git commit -a -m "re-fixed conflict" 
 
-
-$text=Get-Content file2.txt
-$text[0..($text.count -2)]|Where-Object {$_ -notmatch "(^<)|(^>)|(^=)|(^c.*v$)"}>file2.txt
-
-git commit -a -m "re-fixed conflict"
-
-
-if ($checkpoint -eq 4){
-    Return
-}
-
-# remote 
-$caution=@"
----------------------------------------------------------
-Make sure you have created remote repository            |
-https://git.soton.ac.uk/username/gitlab                 |
-(If you already have one, delete it and recreate again) |
-Press any key to continue                               |
----------------------------------------------------------
-
-"@
-
-Read-Host -Prompt $caution
+if [ $1 = 4 ]
+then
+    exit
+fi
+#remote
+caution=$(cat << EOF
+--------------------------------------------------
+Make sure you have created remote repository     |
+https://git.soton.ac.uk/username/gitlab     |
+(If you already have, delete and recreate again) |
+Press any key to continue                        |
+--------------------------------------------------
+EOF
+)
+echo "$caution"
+read
 git remote add origin https://git.soton.ac.uk/hf1g22/gitlab
 git checkout main
 git push -u origin main
 git checkout dev 
 git push -u origin dev
-
-$caution=@"
+caution=$(cat << EOF
 --------------------------------------------------
 Make sure you have created file4.txt             |
-on the remote repository                         | |
+on the remote  repository                        |                                        |
 Press any key to continue                        |
 --------------------------------------------------
+EOF
+)
+echo "$caution"
+read
+err="Cannot find file4.txt"
+for i in {1..3}
+do
+    
+    git pull 2>/dev/null 1>/dev/null
+    git checkout main 2>/dev/null 1>/dev/null
+    git pull 2>/dev/null 1>/dev/null
+    if [ -f "file4.txt" ]
+    then
+      break
+    fi
+    echo "$err"
+    read
+done
 
-"@
-Read-Host -Prompt $caution
-git pull
-git checkout main
-git pull
+if [ $1 = 5 ]
+then
+    exit
+fi
 
 
-if ($checkpoint -eq 5){
-    Return
-}
+
+
 
 # leaderboard
-Remove-Item -Force -Recurse *
-$gig=@"
+rm -rf *
+
+gig=$(cat << EOF
 .idea
 __pycache
-"@
-echo $gig >>.gitignore
-$code1=@"
+EOF
+)
+echo "$gig" >>.gitignore
+code1=$(cat << EOF
 from datetime import datetime,timedelta
 
 def init_leaderboard()->dict[str,timedelta]:
@@ -151,29 +168,32 @@ def add_player(leaderboard:dict[str,timedelta],player_name:str)->bool:
         return False
     leaderboard.update({player_name:None})
     return True
-"@
-echo $code1 >>leaderboard.py
+EOF
+)
+echo "$code1" >>leaderboard.py
 git init
 git add leaderboard.py .gitignore 
 git commit -m "implemented init and add_player"
-$caution=@"
+git checkout -b dev
+caution=$(cat << EOF
 --------------------------------------------------
 Make sure you have created remote repository     |
 https://git.soton.ac.uk/username/leaderboard     |
 (If you already have, delete and recreate again) |
 Press any key to continue                        |
 --------------------------------------------------
-
-"@
-Read-Host -Prompt $caution
+EOF
+)
+echo "$caution"
+read
 git remote add origin https://git.soton.ac.uk/hf1g22/leaderboard
 git push -u origin main
-git checkout -b dev
+git checkout dev
 git push -u origin dev
 git branch -c feature1
 git branch -c feature2
 git checkout feature1
-$code=@"
+code=$(cat << EOF 
 def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int:
     if time.total_seconds()<0:
         return 1
@@ -183,48 +203,46 @@ def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int
     if leaderboard[player_name]==None or leaderboard[player_name]> time:
         leaderboard.update({player_name:time})
     return 0
-"@
-echo $code >>leaderboard.py
+EOF
+)
+echo "$code" >>leaderboard.py
 git commit -a -m "implemented add_run"
 git checkout feature2
-$code=@"
+code=$(cat << EOF
 def clear_score(leaderboard,player_name):
     if player_name not in leaderboard:
         return False
     leaderboard.update({player_name:None})
     return True
-"@
-echo $code >>leaderboard.py
+EOF
+)
+echo "$code" >>leaderboard.py
 git commit -a -m "implemented clear_score"
 git checkout dev 
 git merge feature1
 git merge feature2
-$text=Get-Content leaderboard.py
-$text[0..($text.count -2)]|Where-Object {$_ -notmatch "(^<)|(^>)|(^=)|(added)"}>leaderboard.py
+sed '/^>\|^<\|^=/d' leaderboard.py > tmp
+mv -f tmp leaderboard.py
 git commit -a -m "fixed merge conflict"
+git push
 git branch -d feature1
 git branch -d feature2
 git log --oneline --graph --all
-$caution=@"
-----------------------------------------------
-We are ready to push to remote.              |
-Make sure remote repository is initialised   |
-----------------------------------------------
 
-"@
-Read-Host -Prompt $caution
-git push 
-
-$caution=@"
+caution=$(cat << EOF
 ----------------------------------------------
 Go to gitlab and perform the merge request   |
 Press any key to continue                    |
 ----------------------------------------------
 
-"@
-Read-Host -Prompt $caution
+EOF
+)
+echo "$caution"
+read
 git checkout main 
 git pull
 git checkout dev 
 git merge main
 git push
+
+
