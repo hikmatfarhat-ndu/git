@@ -10,7 +10,7 @@ The "create_git.ps1" file is a script that allows you to reproduce the steps in 
 Git is used to keep track of all your work that you choose to save. It does so by saving a sequence of "snapshots" or versions of your files. 
 
 A version of a file can be in one of three places as show in the figure : working directory, staging area, or git directory
-![three-stages](three-stages.   )
+![three-stages](three-stages.png)
 
 The working directory is just that: the files and folders that reside on your filesystem. You can view the structure and content of the working directory using file explorer.
 The staging area is a file kep by Git, stores information about what will go into your next snapshot (commit).

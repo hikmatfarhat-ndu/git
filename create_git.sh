@@ -1,4 +1,106 @@
 #!/bin/bash
+
+leaderboard(){
+
+# leaderboard
+rm -rf *
+
+gig=$(cat << EOF
+.idea
+__pycache
+EOF
+)
+echo "$gig" >>.gitignore
+code1=$(cat << EOF
+from datetime import datetime,timedelta
+
+def init_leaderboard()->dict[str,timedelta]:
+    return {}
+
+
+def add_player(leaderboard:dict[str,timedelta],player_name:str)->bool:
+    if player_name in leaderboard:
+        return False
+    leaderboard.update({player_name:None})
+    return True
+EOF
+)
+echo "$code1" >>leaderboard.py
+git init
+git add leaderboard.py .gitignore 
+git commit -m "implemented init and add_player"
+git checkout -b dev
+caution=$(cat << EOF
+--------------------------------------------------
+Make sure you have created remote repository     |
+https://git.soton.ac.uk/username/leaderboard     |
+(If you already have, delete and recreate again) |
+Press any key to continue                        |
+--------------------------------------------------
+EOF
+)
+echo "$caution"
+read
+git remote add origin https://git.soton.ac.uk/hf1g22/leaderboard
+git push -u origin main
+git checkout dev
+git push -u origin dev
+git branch -c feature1
+git branch -c feature2
+git checkout feature1
+code=$(cat << EOF 
+def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int:
+    if time.total_seconds()<0:
+        return 1
+    if player_name not in leaderboard:
+        return 2
+    
+    if leaderboard[player_name]==None or leaderboard[player_name]> time:
+        leaderboard.update({player_name:time})
+    return 0
+EOF
+)
+echo "$code" >>leaderboard.py
+git commit -a -m "implemented add_run"
+git checkout feature2
+code=$(cat << EOF
+def clear_score(leaderboard,player_name):
+    if player_name not in leaderboard:
+        return False
+    leaderboard.update({player_name:None})
+    return True
+EOF
+)
+echo "$code" >>leaderboard.py
+git commit -a -m "implemented clear_score"
+git checkout dev 
+git merge feature1
+git merge feature2
+sed '/^>\|^<\|^=/d' leaderboard.py > tmp
+mv -f tmp leaderboard.py
+git commit -a -m "fixed merge conflict"
+git push
+git branch -d feature1
+git branch -d feature2
+git log --oneline --graph --all
+
+caution=$(cat << EOF
+----------------------------------------------
+Go to gitlab and perform the merge request   |
+Press any key to continue                    |
+----------------------------------------------
+
+EOF
+)
+echo "$caution"
+read
+git checkout main 
+git pull
+git checkout dev 
+git merge main
+git push
+
+}
 # Basics
 if [ $# = 0 ]
 then
@@ -7,6 +109,14 @@ then
 fi
 cd ../git-tmp
 shopt -s dotglob
+if [ "$1" = "l" ]
+then
+   echo "leaderboard"
+   leaderboard
+   exit
+else
+   exit
+fi
 rm -rf *
 git init
 git config advice.detachedHead false
@@ -143,106 +253,5 @@ then
     exit
 fi
 
-
-
-
-
-# leaderboard
-rm -rf *
-
-gig=$(cat << EOF
-.idea
-__pycache
-EOF
-)
-echo "$gig" >>.gitignore
-code1=$(cat << EOF
-from datetime import datetime,timedelta
-
-def init_leaderboard()->dict[str,timedelta]:
-    return {}
-
-
-def add_player(leaderboard:dict[str,timedelta],player_name:str)->bool:
-    if player_name in leaderboard:
-        return False
-    leaderboard.update({player_name:None})
-    return True
-EOF
-)
-echo "$code1" >>leaderboard.py
-git init
-git add leaderboard.py .gitignore 
-git commit -m "implemented init and add_player"
-git checkout -b dev
-caution=$(cat << EOF
---------------------------------------------------
-Make sure you have created remote repository     |
-https://git.soton.ac.uk/username/leaderboard     |
-(If you already have, delete and recreate again) |
-Press any key to continue                        |
---------------------------------------------------
-EOF
-)
-echo "$caution"
-read
-git remote add origin https://git.soton.ac.uk/hf1g22/leaderboard
-git push -u origin main
-git checkout dev
-git push -u origin dev
-git branch -c feature1
-git branch -c feature2
-git checkout feature1
-code=$(cat << EOF 
-def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int:
-    if time.total_seconds()<0:
-        return 1
-    if player_name not in leaderboard:
-        return 2
-    
-    if leaderboard[player_name]==None or leaderboard[player_name]> time:
-        leaderboard.update({player_name:time})
-    return 0
-EOF
-)
-echo "$code" >>leaderboard.py
-git commit -a -m "implemented add_run"
-git checkout feature2
-code=$(cat << EOF
-def clear_score(leaderboard,player_name):
-    if player_name not in leaderboard:
-        return False
-    leaderboard.update({player_name:None})
-    return True
-EOF
-)
-echo "$code" >>leaderboard.py
-git commit -a -m "implemented clear_score"
-git checkout dev 
-git merge feature1
-git merge feature2
-sed '/^>\|^<\|^=/d' leaderboard.py > tmp
-mv -f tmp leaderboard.py
-git commit -a -m "fixed merge conflict"
-git push
-git branch -d feature1
-git branch -d feature2
-git log --oneline --graph --all
-
-caution=$(cat << EOF
-----------------------------------------------
-Go to gitlab and perform the merge request   |
-Press any key to continue                    |
-----------------------------------------------
-
-EOF
-)
-echo "$caution"
-read
-git checkout main 
-git pull
-git checkout dev 
-git merge main
-git push
 
 
