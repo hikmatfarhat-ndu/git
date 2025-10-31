@@ -107,18 +107,24 @@ then
  echo "usage: create_git.sh checkpoint"
  exit
 fi
+if [ -d "../git-tmp" ]
+then
+echo "changing to ../git-tmp"
 cd ../git-tmp
+else
+echo "../git-tmp does not exist"
+exit
+fi
 shopt -s dotglob
 if [ "$1" = "l" ]
 then
    echo "leaderboard"
    leaderboard
    exit
-else
-   exit
 fi
 rm -rf *
 git init
+git branch -m "main"
 git config advice.detachedHead false
 echo "first version of file1" >file1.txt
 git add file1.txt
