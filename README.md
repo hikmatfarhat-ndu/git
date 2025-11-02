@@ -465,7 +465,7 @@ Next we want to inform git of the remote repository
 ```bash
 git remote add origin URL
 ```
-Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```[https://github.com/username/leaderboard]``` which you can copy directly from the browser address bar.
+Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```https://github.com/username/leaderboard``` which you can copy directly from the browser address bar.
 
 At this point the remote repository has no branches. Next we want to setup remote branches to be tracked by the local ones.
 ```bash
@@ -475,7 +475,7 @@ At this point the remote repository has no branches. Next we want to setup remot
 >git push -u origin dev
 ```
 The "-u" option is done once at the beginning, and it is short for "--set-upstream". "push" pushes the local changes to the upstream repository.
-Next go to ```[https://git.soton.ac.uk/username/gitlab](https://github.com/username/leaderboard)](https://github.com/username/leaderboard)``` and create a new file "file4.txt" as shown below:
+Next go to ```https://github.com/username/leaderboard``` and create a new file "file4.txt" as shown below:
 ![gitlab1](gitlab1.png). 
 
 Write "First version of file4" in the file and scroll all the way to the bottom and write "added file4.txt" in the "Commit message" and press "Commit changes".
@@ -770,6 +770,7 @@ Finally, we push the changes to the remote
 ```bash
 git push -u origin main
 ``` -->
+
 
 
 
