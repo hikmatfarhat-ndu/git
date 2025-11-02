@@ -448,20 +448,26 @@ git show ???
 
 
 ## 5. Remote repos and Gitlab (or Github)
-
+<!--
 Go to ```https://git.soton.ac.uk```. 
 1. In the top right corner click on "New project"
 2. Choose "Create blank project"
 3. In "Project name" type "gitlab"
 4. Uncheck "Initialize repository with README" 
-
+-->
+Got to ```https://github.com```.
+1. In the top right click "New"
+2. In "Repository Name" write ```leaderboard```
+3. In "Choose Visibility" select ```private```
+4. In the bottom click "Create Repository"
+   
 Next we want to inform git of the remote repository
 ```bash
 git remote add origin URL
 ```
-Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```https://git.soton.ac.uk/username/gitlab```
+Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```[https://github.com/username/leaderboard]``` which you can copy directly from the browser address bar.
 
-At this point the remote repository has no branches. We made sure of that by "unchecking" the "Initialize repository with README". Next we want to setup remote branches to be tracked by the local ones.
+At this point the remote repository has no branches. Next we want to setup remote branches to be tracked by the local ones.
 ```bash
 >git checkout main
 >git push -u origin main
@@ -469,7 +475,7 @@ At this point the remote repository has no branches. We made sure of that by "un
 >git push -u origin dev
 ```
 The "-u" option is done once at the beginning, and it is short for "--set-upstream". "push" pushes the local changes to the upstream repository.
-Next go to ```https://git.soton.ac.uk/username/gitlab``` and create a new file "file4.txt" as shown below:
+Next go to ```[https://git.soton.ac.uk/username/gitlab](https://github.com/username/leaderboard)](https://github.com/username/leaderboard)``` and create a new file "file4.txt" as shown below:
 ![gitlab1](gitlab1.png). 
 
 Write "First version of file4" in the file and scroll all the way to the bottom and write "added file4.txt" in the "Commit message" and press "Commit changes".
@@ -545,10 +551,12 @@ Now commit the first version to the repo.
 >git commit -m "implemented init and add_player"
 >git checkout -b dev
 ```
-
+<!--
 Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
 ```bash
 >git remote add origing https://git.soton.ac.uk/username/leaderboard
+-->
+Got to ```https://github.com``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
 >git checkout main
 >git push -u origin main
 >git checkout dev
@@ -762,6 +770,7 @@ Finally, we push the changes to the remote
 ```bash
 git push -u origin main
 ``` -->
+
 
 
 
