@@ -476,9 +476,15 @@ At this point the remote repository has no branches. Next we want to setup remot
 ```
 The "-u" option is done once at the beginning, and it is short for "--set-upstream". "push" pushes the local changes to the upstream repository.
 Next go to ```https://github.com/username/leaderboard``` and create a new file "file4.txt" as shown below:
-![gitlab1](gitlab1.png). 
+<!-- ![gitlab1](gitlab1.png).  -->
+![github1](github-create-new.png)
 
-Write "First version of file4" in the file and scroll all the way to the bottom and write "added file4.txt" in the "Commit message" and press "Commit changes".
+Write "First version of file4" in the file and click "Commit changes".
+![github2](github-add-new.png)
+
+In the commit dialog write "added file4.txt" in the "Commit message" and press "Commit changes".
+![github3](github-commit.png)
+
 Now the remote branch main has an extra file. To synchronise the local branch
 ```bash
 >git pull
@@ -557,12 +563,13 @@ Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard```
 >git remote add origing https://git.soton.ac.uk/username/leaderboard
 -->
 Got to ```https://github.com``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
+```
 >git checkout main
 >git push -u origin main
 >git checkout dev
 >git push -u origin dev
 ```
-**Note**: it is important to push main first. The first branch is considered as default.
+**Note**: it is **important** to push main first. The first branch is considered as default.
 
 
 Next, "two of our developers" will implement ```add_run``` and ```clear_score```. Towards that end, each developer creates a different branch
