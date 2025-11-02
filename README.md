@@ -457,7 +457,7 @@ Go to ```https://git.soton.ac.uk```.
 -->
 Got to ```https://github.com```.
 1. In the top right click "New"
-2. In "Repository Name" write ```leaderboard```
+2. In "Repository Name" write ```git-tmp```
 3. In "Choose Visibility" select ```private```
 4. In the bottom click "Create Repository"
    
@@ -465,7 +465,7 @@ Next we want to inform git of the remote repository
 ```bash
 git remote add origin URL
 ```
-Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```https://github.com/username/leaderboard``` which you can copy directly from the browser address bar.
+Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```https://github.com/username/git-tmp``` which you can copy directly from the browser address bar.
 
 At this point the remote repository has no branches. Next we want to setup remote branches to be tracked by the local ones.
 ```bash
