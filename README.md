@@ -11,7 +11,7 @@ The above two commands create two sibling directories, "git-tmp" which is initia
 This file is a script that allows you to reproduce the steps in case you made a mistake. For example, if you want to execute all the steps up to and including section 3.
 ```bash
 $cd git
-$chmod 755 
+$./create_git.sh 3
 ```
 
 ## 1. Basics
