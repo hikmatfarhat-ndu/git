@@ -217,12 +217,12 @@ $git log --oneline
 ```
 $git diff d039f56
 ```
-![diff1](diff1.png)
+![diff2](diff2.png)
 
 ```
 $git diff 880be99
 ```
-![diff2](diff2.png)
+![diff1](diff1.png)
 ## 2. Branching
 
 
