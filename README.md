@@ -353,16 +353,16 @@ Note the 'Fast-forward'. This is because,before the last merge, dev pointed to a
 ## 4. Undoing commits
 Suppose that we made a mistake in merging and we want to undo it. The safest way to undo commit(s) is to use ```revert```. This command will undo commits by 'creating reverse commits'.
 
-First we can inspect the content of ```file2.txt``` before the merge. Using the above graph we see that the last commit, on **main**, before merge is bbaf50b (or ```main~1```) 
+First we can inspect the content of ```file2.txt``` before the merge. Using the above graph we see that the last commit, on **main**, before merge is 5df7022 (or ```main~1```) 
 ```bash
-$git checkout bbaf50b # git checkout main~1 is better
+$git checkout 5df7022 # git checkout main~1 is better
 $cat file2.txt
 first version of file2
 second version of file2
 changed on main
 $git checkout main # go back to main
-$git revert 65bf415 # git revert HEAD is better
-error: commit 65bf4151ecc93d15da13d9f01cef52341e9021d2 is a merge but no -m option was given.
+$git revert 7669ca2 # git revert HEAD is better
+error: commit 7669ca2.... is a merge but no -m option was given.
 fatal: revert failed
 ```
 The error we got is due to the fact that commit 7669ca2 has two parents, so we need to specify which parent to 'revert' to.
