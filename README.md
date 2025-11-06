@@ -14,7 +14,7 @@ Go to ```https://git.soton.ac.uk```.
 -->
 
 
-Open "Git Bash" to get a Unix shell.
+On your computer open "Git Bash" to get a Unix shell.
 1. git config --global user.name <Your Name>
 2. git config --global user.email <Your Email>
 
@@ -808,6 +808,7 @@ Finally, we push the changes to the remote
 ```bash
 git push -u origin main
 ``` -->
+
 
 
 
