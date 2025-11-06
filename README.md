@@ -85,7 +85,7 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)
 ```
-At this point file1.txt is newly added to the working directory, so it is untracked. To start tracking it, we add it to the index using the **add** command.
+At this point file1.txt is newly added to the working directory, so it is **untracked**. To start **tracking** it, we add it to the index using the **add** command.
 
 ```bash
 $git add file1.txt
@@ -97,7 +97,7 @@ Changes to be committed:
         new file:   file1.txt
 ```
 So now there are two (identical) copies of file1.txt, in the **working** directory and in the **index**. If we make changes to file1.txt they will affect the one in the **working** directory only. Edit "file1.txt", by adding the line "second version of file1".
-(**note** the difference between ```>```, overwrite, and ```>>```, append )
+(**note** the difference between ```>```, overwrite, and ```>>```, append ). Of course you can edit the files using any editor, but using "echo" and redirection allows us to automate the operations.
 
 ```bash
 $echo "second version of file1">>file1.txt
@@ -114,7 +114,7 @@ Changes not staged for commit:
         modified:   file1.txt
 ```
 
-At this point the version in the **working** directory and the **index** are different. We can either add the second version to the **index**, then **commit**, or restore the version in the index (that contains one line only) to the working directory.
+At this point the version in the **working** directory and the **index** are **different**. We can either add the second version to the **index**, then **commit**, or restore the version in the index (that contains one line only) to the working directory.
 Let us try the last option.
 ```bash
 $cat file1.txt
@@ -207,14 +207,22 @@ $git commit -m "added second version of file1"
 $git add file1.txt
 $git commit -m "added third version of file1"
 $git log --oneline
-* 99365ba (HEAD -> main) added third verison of file1
-* 880be99 added second versio of file1
+* 99365ba (HEAD -> main) added third version of file1
+* 880be99 added second version of file1
 * d039f56 added first version of file1
 ```
 
 
-**Note**: you will get different values for the hashes because the hash includes the author of the commit and the timestamp (try ```git log``` to see the full information)
+**Note**: you will get different values for the hashes because the hash includes the author of the commit and the timestamp (try ```git log``` to see the full information). Nex try
+```
+$git diff d039f56
+```
+![diff1](diff1.png)
 
+```
+$git diff 880be99
+```
+![diff2](diff2.png)
 ## 2. Branching
 
 
