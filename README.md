@@ -455,7 +455,12 @@ git show ???
 ``` -->
 
 
-## 5. Remote repos and Gitlab (or Github)
+## 5. Remote repos and Github (or Gitlab)
+If you don't have a Github account then
+1. Go to https://github.com
+2. Top right click on Signup
+
+![signup](signup.png)
 <!--
 Go to ```https://git.soton.ac.uk```. 
 1. In the top right corner click on "New project"
@@ -796,6 +801,7 @@ Finally, we push the changes to the remote
 ```bash
 git push -u origin main
 ``` -->
+
 
 
 
