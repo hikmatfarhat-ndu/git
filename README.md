@@ -1,5 +1,23 @@
 # GIT
 
+If you don't have a Github account then
+1. Go to https://github.com
+2. Top right click on Signup to get the page below
+
+![signup](signup.png)
+<!--
+Go to ```https://git.soton.ac.uk```. 
+1. In the top right corner click on "New project"
+2. Choose "Create blank project"
+3. In "Project name" type "gitlab"
+4. Uncheck "Initialize repository with README" 
+-->
+
+
+Open "Git Bash" to get a Unix shell.
+1. git config --global user.name <Your Name>
+2. git config --global user.email <Your Email>
+
 To start with create two sibling directories (folders) named "git" and "git-tmp". You will do all the work in "git-tmp". 
 ```bash
 $mkdir git-tmp
@@ -456,18 +474,7 @@ git show ???
 
 
 ## 5. Remote repos and Github (or Gitlab)
-If you don't have a Github account then
-1. Go to https://github.com
-2. Top right click on Signup
 
-![signup](signup.png)
-<!--
-Go to ```https://git.soton.ac.uk```. 
-1. In the top right corner click on "New project"
-2. Choose "Create blank project"
-3. In "Project name" type "gitlab"
-4. Uncheck "Initialize repository with README" 
--->
 Got to ```https://github.com```.
 1. In the top right click "New"
 2. In "Repository Name" write ```git-tmp```
@@ -801,6 +808,7 @@ Finally, we push the changes to the remote
 ```bash
 git push -u origin main
 ``` -->
+
 
 
 
