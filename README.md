@@ -2,7 +2,7 @@
 
 If you don't have a Github account then
 1. Go to https://github.com
-2. Top right click on Signup to get the page below
+2. Top right click on "Sign up" to get the page below
 
 ![signup](signup.png)
 <!--
@@ -14,23 +14,29 @@ Go to ```https://git.soton.ac.uk```.
 -->
 
 
-On your computer open "Git Bash" to get a Unix shell.
-1. git config --global user.name <Your Name>
-2. git config --global user.email <Your Email>
-
-To start with create two sibling directories (folders) named "git" and "git-tmp". You will do all the work in "git-tmp". 
+Once you have created your Github account, on your local computer open "Git Bash" to get a Unix shell. Type the following commands:
 ```bash
-$mkdir git-tmp
-$git clone https://github.com/hikmatfarhat-ndu/git/
+$git config --global user.name <Your Name>
+$git config --global user.email <Your Email>
 
 ```
-The above two commands create two sibling directories, "git-tmp" which is initially empty, and "git" that contains many files, the most important being "create_git.sh".
+
+We will need two sibling directories (folders) named "git" and "git-tmp". "git" will be created for you by ```git``` when you clone the remote repository. You will create "git-tmp" explicitly using ```mkdir```. Most of the work will be in "git-tmp". 
+
+```bash
+$git clone https://github.com/hikmatfarhat-ndu/git/
+$mkdir git-tmp
+
+
+```
+"git-tmp" is initially empty, and "git" that contains many files, for example the file you are reading, and "create_git.sh".
 
 This file is a script that allows you to reproduce the steps in case you made a mistake. For example, if you want to execute all the steps up to and including section 3.
 ```bash
 $cd git
 $./create_git.sh 3
 ```
+For now we will do all the steps manually.
 
 ## 1. Basics
 Git is used to keep track of all your work that you choose to save. It does so by saving a sequence of "snapshots" or versions of your files. 
@@ -55,7 +61,8 @@ A typical workflow would be:
 
 Typically there are two ways to start version control on a directory. The first is initializing the directory to be under version control.
 
-We start with an example. Open a terminal and ```cd```  (change directory) to folder "git-tmp". 
+We start with an example. Open a terminal (Linux) or "Git bash" (Windows) and ```cd```  (change directory) to folder "git-tmp". 
+
 ```bash
 $git init
 $git status
