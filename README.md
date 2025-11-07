@@ -396,6 +396,9 @@ $git revert -m 1 7669ca2 # git revert -m 1 HEAD
 $ls
 file1.txt  file2.txt  file3.txt
 $cat file2.txt
+first version of file2
+second version of file2
+changed on main
 $git log --oneline --graph --all
 ```
 ![revert](revert.png)
