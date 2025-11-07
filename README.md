@@ -353,7 +353,16 @@ Note the 'Fast-forward'. This is because,before the last merge, dev pointed to a
 ## 4. Undoing commits
 Suppose that we made a mistake in merging and we want to undo it. The safest way to undo commit(s) is to use ```revert```. This command will undo commits by 'creating reverse commits'.
 
-First we can inspect the content of ```file2.txt``` before the merge. Using the above graph we see that the last commit, on **main**, before merge is 5df7022 (or ```main~1```) 
+First we can inspect the content of ```file2.txt```  before and after the merge. After the merge:
+```bash
+$cat file2.txt
+first version of file2
+second version of file2
+changed on main
+changed on dev
+```
+
+ Using the above graph we see that the last commit, on **main**, before merge is 5df7022 (or ```main~1```) 
 ```bash
 $git checkout 5df7022 # git checkout main~1 is better
 $cat file2.txt
@@ -361,6 +370,22 @@ first version of file2
 second version of file2
 changed on main
 $git checkout main # go back to main
+```
+Alternatively, we can view the difference between the two version
+```bash
+git diff main main~1
+
+--- a/file2.txt
++++ b/file2.txt
+@@ -1,4 +1,3 @@
+ first version of file2
+ second version of file2
+ changed on main
+-changed on dev
+
+```
+Next we "revert" the last commit.
+```bash
 $git revert 7669ca2 # git revert HEAD is better
 error: commit 7669ca2.... is a merge but no -m option was given.
 fatal: revert failed
@@ -380,11 +405,11 @@ One can check that indeed commits 5493b5b and 5df7022 have the same snapshot by 
 
 Another way of undoing commits is to use ```reset```. When we resolved the the previous merge conflict we removed the line "added lines on dev" and kept the line "changed on dev". Suppose that it was a mistake and we should have done the opposite. 
 
-The problem  here is that branch dev points to a commit that is an ancestor of the commit pointed to by main, so ```git checkout dev;git merge main``` will not change the contents of file2. Instead we point main to the commit that we want, in this case to ```main~2```.
+The problem  here is that branch dev points to a commit that is an ancestor of the commit pointed to by main, so ```git checkout dev;git merge main``` will not change the contents of file2. Instead we point main to the commit that we want, in this case to ```main~1```.
 
 (**Note**: be cautious in using reset since it alters the history, especially if you are using a remote server).
 ```bash
-$git reset --hard 5df7022 (or git reset --hard main~2)
+$git reset --hard 5df7022 (or git reset --hard main~1)
 $git log --oneline --graph --all
 ```
 ![reset](reset.png)
