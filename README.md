@@ -894,7 +894,7 @@ By the end of this session, students will be able to:
 ---
 
 
-## Setup
+## 7. Setup
 First login to Github and create a **new public** repo and name it ```python-ci```. The url for that repo will be ```https://github.com/your-account/python-ci```. Then open ```git-bash``` and execute the following commands
 
 ```bash
@@ -927,7 +927,7 @@ def test_add_type_error():
 
 It also contains the file the Github workflow ```.github/workflows/python-ci.yml```
 
-### Github Actions
+### 8. Github Actions
 
 GitHub Actions are workflows that automatically run when certain events happen in your repository — like when you push commits. Workflows are saved in YAML format in the repository in the directory ".github/workflows". In your favorite editor open the file below:
 
