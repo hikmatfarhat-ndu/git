@@ -626,10 +626,10 @@ __pycache__
 Now commit the first version to the repo.
 
 ```bash
->git init
->git add leaderboard.py .gitignore
->git commit -m "implemented init and add_player"
->git checkout -b dev
+$git init
+$git add leaderboard.py .gitignore
+$git commit -m "implemented init and add_player"
+
 ```
 <!--
 Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
@@ -637,25 +637,26 @@ Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard```
 >git remote add origing https://git.soton.ac.uk/username/leaderboard
 -->
 Got to ```https://github.com``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
-```
->git checkout main
->git push -u origin main
->git checkout dev
->git push -u origin dev
+
+```bash
+$git remote add origin https://github.com/yourusername/leaderboard
+$git push -u origin main
+$git checkout -b dev
+$git push -u origin dev
 ```
 **Note**: it is **important** to push main first. The first branch is considered as default.
 
 
 Next, "two of our developers" will implement ```add_run``` and ```clear_score```. Towards that end, each developer creates a different branch
 ```bash
->git branch -c feature1
->git branch -c feature2
+$git branch -c feature1
+$git branch -c feature2
 ```
 **Note**: Each developer works on their local computer and since the feature branches will be deleted later it is possible for both branches to have the same name "feature" since they are on different computer and will not be uploaded to the remote server. For now, since we are "simulating" this workflow on the same computer we give the two branches different names. 
 
 The "first developer" works on ```add_run```
 ```bash
->git checkout feature1
+$git checkout feature1
 ```
 copy the code below to ```leaderboard.py```
 
@@ -672,11 +673,11 @@ def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int
 ```
 Save the file and
 ```bash
->git commit -a -m "implemented add_run"
+$git commit -a -m "implemented add_run"
 ```
 The "second developer" uses the feature2 branch.
 ```bash
->git checkout feature2
+$git checkout feature2
 ```
 copy the code below to ```leaderboard.py```
 ```python
@@ -688,22 +689,22 @@ def clear_score(leaderboard,player_name):
 ```
 Save the file and 
 ```bash
->git commit -a -m "implemented clear_score"
+$git commit -a -m "implemented clear_score"
 ```
 at this point we check the progress and we see that the two development branches have diverged
 ```bash
->git log --oneline --graph --all
+$git log --oneline --graph --all
 ```
 ![diverge](diverge.png)
 
 To incorporate the changes we merge the two branches into dev.
 ```bash
->git checkout dev
->git merge feature1
+$git checkout dev
+$git merge feature1
 ```
 Next we incorporate the changes from feature2. This will cause a merge conflict.
 ```bash
->git merge feature2
+$git merge feature2
 ```
 You can fix the merge conflict either by editing the code in ```leaderboard.py``` directly. When you open ```leaderboard.py``` in any editor you will see something like this:
 ```
@@ -718,42 +719,37 @@ content in dev2 but not in main
 ```
 You can edit the above the way you like but in this case we want to keep both changes so all we have to do is remove the lines containing "<<<<<<", ">>>>>>" and "=======" and save the file.
 ```bash
->git add leaderboard.py
->git commit -m "merged feature1 and feature2"
+$git add leaderboard.py
+$git commit -m "merged feature1 and feature2"
 ```
 A second way to do the merge is by using your IDE. For example, after the second merge command, open ```leaderboard.py``` in PyCharm and click the button at the top right corner "resolve conflicts" which will open a window with 3 panes as shown below.
 ![resolve-conflicts](resolve-conflicts.png)
 You can choose to add or remove the parts which are different. In our case we need to add both so press on ">>" on both left and right panes and press "apply". Finally
 ```bash
->git commit -m "merged feature1 and feature2"
+$git commit -m "merged feature1 and feature2"
 ```
 The branches ```feature1``` and ```feature2``` are local branches so there is no need to keep them.
 ```bash
->git branch -D feature1
->git branch -D feature2
->git log --oneline --graph --all
+$git branch -D feature1
+$git branch -D feature2
+$git log --oneline --graph --all
 ```
 To update the remote **dev** branch
 ```bash
-git push
+$git push
 ```
-Now go to ```https://git.soton.ac.uk/username/leaderboard``` (refresh if necessary). On the top of the page, press the "Create merge request".
+Now go to ```https://github.com/username/leaderboard``` (refresh if necessary). On the top of the page, press the "Compare & pull request".
 - In the "Title" write "new features" 
 - In the "Description" write "implemented add_run and clear_score". 
-- Uncheck the "Delete source branch..." at the bottom
-- Press "Create merge request".
-(**note**: sometimes it is called "pull request")
+- Press "Create pull request".
+The above created a request to merge the changes in **dev** into the **main** branch.
 
-The above created a request to merge the changes in **dev** into the **main** branch. In a real software project, the team leader needs to approve what goes into **main** branch. This is why you see a new page with "Approve" button. In this case it is optional.
+![merge-pull](merge-pull.png)
 
-Uncheck "Delete source branch" and press "Merge". Finally, we update our local repository
+ Push "Merge pull request", optionally edit the "Commit message" and "Confirm merge". Finally, update our local repository
 ```bash
-git checkout main
-git pull
-git checkout dev
-git merge main # keep dev up to date with main
-git push # keep remote dev up to  date with main
-git log --oneline --graph --all
+$git checkout main
+$git pull
 ```
 <!-- 
 Now developer 1 is tasked with implementing ```display_leaderboar```. First we need to bring branch ```dev``` in line with ```main```.
