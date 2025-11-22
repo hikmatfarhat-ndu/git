@@ -8,15 +8,13 @@ Go to ```https://git.soton.ac.uk```.
 4. Uncheck "Initialize repository with README" 
 -->
 
-
-Once you have created your Github account, on your local computer open "Git Bash" to get a Unix shell. Type the following commands:
+On your local computer open a Unix shell. If you are using Windows and have installed Git then open "Git Bash" to get a Unix shell. On Linux open a terminal. Type the following commands:
 ```bash
 $git config --global user.name <Your Name>
 $git config --global user.email <Your Email>
 
 ```
-
-We will need two sibling directories (folders) named "git" and "git-tmp". "git" will be created for you by ```git``` when you clone the remote repository. You will create "git-tmp" explicitly using ```mkdir```. Most of the work will be in "git-tmp". 
+Your name and email will be used to identify who performed the commits. We will need two sibling directories (folders) named "git" and "git-tmp". "git" will be created for you by ```git``` when you clone the remote repository. You will create "git-tmp" explicitly using ```mkdir```. Most of the work will be in "git-tmp". 
 
 ```bash
 $git clone https://github.com/hikmatfarhat-ndu/git/
