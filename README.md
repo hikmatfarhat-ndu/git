@@ -1000,7 +1000,7 @@ If we check the actions tab now it will look something like
 As you can see the second run of the action is successful.
 
 
-### Protecting the main branch
+### 9. Protecting the main branch
 
 Typically, the main branch of a repository has working and well-tested code. One way to ensure that, is to disallow direct commits into the the main branch. It works as follows:
 1. commit new code to a separate branch, say **dev**
@@ -1083,7 +1083,7 @@ $git push
 Now we can perform the merge because the commit passed the required workflow. Note that the pull request was still open.
 
 
-### Code review
+### 10. Code review
 Another option that is widely used is to block merges into main unless the code is reviewed by another developer or team leader.
 Go to "Settings->Collaborators" and add another Github account ("Add people"), for example the person sitting next to you in the lab. They should check their inbox as shown in the figure below and **accept** the invitation.
 ![inbox](figs/inbox.png)
@@ -1127,7 +1127,7 @@ After you merge the pull request **Disable** the ruleset "protect main" to proce
 ![disable](figs/disable-ruleset.png)
 
 
-### Caching
+### 11. Caching
 
 The trivial Python code we are using in our examples does not require any dependencies. Typical production code depends on other packages which are installed by, for example, ```pip``` using a ```requirements.txt``` file.
 
@@ -1159,7 +1159,7 @@ To compare the performance of caching, edit the ```add.py``` file by adding an e
 
 
 
-## Testing multiple Python versions and OS
+### 12. Testing multiple Python versions and OS
 
 In many situations we would like to test our code against multiple versions of Python and/or different operating systems. This can be done by using the "strategy/matrix" in Github actions.
 
