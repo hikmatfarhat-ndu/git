@@ -1,10 +1,5 @@
 # GIT
 
-If you don't have a Github account then
-1. Go to https://github.com
-2. Top right click on "Sign up" to get the page below
-
-![signup](signup.png)
 <!--
 Go to ```https://git.soton.ac.uk```. 
 1. In the top right corner click on "New project"
@@ -518,7 +513,14 @@ git show ???
 
 ## 5. Remote repos and Github (or Gitlab)
 
-Got to ```https://github.com```.
+
+If you don't have a Github account then
+1. Go to https://github.com
+2. Top right click on "Sign up" to get the page below
+
+![signup](signup.png)
+
+Login to your account on  ```https://github.com```.
 1. In the top right click "New"
 2. In "Repository Name" write ```git-tmp```
 3. In "Choose Visibility" select ```private```
