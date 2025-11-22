@@ -24,10 +24,10 @@ $mkdir git-tmp
 ```
 "git-tmp" is initially empty, and "git" that contains many files, for example the file you are reading, and "create_git.sh".
 
-This file is a script that allows you to reproduce the steps in case you made a mistake. For example, if you want to execute all the steps up to and including section 3.
+This file is a script that allows you to reproduce the steps in case you made a mistake. For example, if you want to execute all the steps up to and including section 3, assuming ```git``` and ```git-tmp``` are sibling directories:
 ```bash
-$cd git
-$./create_git.sh 3
+$cd git-tmp
+$../git/create_git.sh 3
 ```
 For now we will do all the steps manually.
 
