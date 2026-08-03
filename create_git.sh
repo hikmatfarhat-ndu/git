@@ -134,7 +134,7 @@ git commit -m "added first version of file1"
 echo "second version of file1" >> file1.txt
 git add file1.txt
 echo "third version of file1">> file1.txt
-git commit -m "added second versio of file1"
+git commit -m "added second version of file1"
 git add file1.txt
 git commit -m "added third verison of file1"
 git log --oneline --graph --all
@@ -157,15 +157,20 @@ git commit -m "first version of file3"
 echo "second version of file3" >>file3.txt
 git commit -a -m "second version of file3"
 git log --oneline --graph --all
+
 if [ $1 = 2 ]
 then
     exit
 fi
-# Merging
-git checkout maincheckpoint
+# Merging without conflict
+git checkout main
 git merge dev
 git log --oneline --graph --all
 ls
+if [ $1 = 3 ]
+then
+   exit
+fi
 # merge with conflict
 git checkout dev 
 git merge main
@@ -182,7 +187,7 @@ sed '/^<\|^>\|^=\|^added/d' file2.txt > tmp
 mv -f tmp file2.txt
 git commit -a -m "fixed merge conflict on file2.text"
 git log --oneline --graph --all
-if [ $1 = 3 ]
+if [ $1 = 4 ]
 then
     exit
 fi
@@ -208,7 +213,7 @@ mv -f tmp file2.txt
 cat file2.txt
 git commit -a -m "re-fixed conflict" 
 
-if [ $1 = 4 ]
+if [ $1 = 5 ]
 then
     exit
 fi
@@ -254,7 +259,7 @@ do
     read
 done
 
-if [ $1 = 5 ]
+if [ $1 = 6 ]
 then
     exit
 fi

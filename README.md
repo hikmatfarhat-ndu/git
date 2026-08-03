@@ -8,6 +8,9 @@ Go to ```https://git.soton.ac.uk```.
 4. Uncheck "Initialize repository with README" 
 -->
 
+
+
+
 On your local computer open a Unix shell. If you are using Windows and have installed Git then open "Git Bash" to get a Unix shell. On Linux open a terminal. Type the following commands:
 ```bash
 $git config --global user.name <Your Name>
@@ -22,7 +25,7 @@ $mkdir git-tmp
 
 
 ```
-"git-tmp" is initially empty, and "git" that contains many files, for example the file you are reading, and "create_git.sh".
+"git-tmp" is initially empty, and "git" contains many files, for example the file you are reading, and "create_git.sh".
 
 This file is a script that allows you to reproduce the steps in case you made a mistake. For example, if you want to execute all the steps up to and including section 3, assuming ```git``` and ```git-tmp``` are sibling directories:
 ```bash
@@ -44,7 +47,7 @@ The git directory contains a complete history of all your saved(committed) snaps
 The figure also shows the typical commands that are used to move a version of a file between the three stages.
 It should be noted that in the working directory and staging area there could be only one version of a given file. The Git directory, however, can contain multiple versions of the file.
 
-The working directory contains the files that you are working on. The staging area contains contains information on what **will be** in the next commit.
+The working directory contains the files that you are working on. The staging area contains information on what **will be** in the next commit.
 A typical workflow would be:
 1. Modify files in the working directory
 2. "add" the modified files to the staging area
@@ -107,7 +110,7 @@ Changes not staged for commit:
         modified:   file1.txt
 ```
 
-At this point the version in the **working** directory and the **index** are **different**. We can either add the second version to the **index**, then **commit**, or restore the version in the index (that contains one line only) to the working directory.
+At this point the version in the **working** directory and the **index** are **different**. We can either add the second version to the **index**, (and later  **commit**), or restore the version in the index (that contains one line only) to the working directory.
 Let us try the last option.
 ```bash
 $cat file1.txt
@@ -116,15 +119,15 @@ first version of file1
 second version of file1
 
 $git restore file1.txt
+$cat file1.txt
+first version of file1
 $git status
 On branch mains
 No commits yet
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
         new file:   file1.txt
-$cat file1.txt
 
-first version of file1
 ```
 
 Our next action is to commit the content of the **index** (staging area).
@@ -140,7 +143,10 @@ $echo "second version of file1">> file1.txt
 $git add file1.txt
 $echo "third version of file1">> file1.txt
 ```
-At this point we have **three** versions of file1.txt: 
+At this point we have **three** versions of file1.txt (as shown in the figure below):
+
+![3-v](../git/three-versions.png)
+
 - one in the working directory (3 lines)
 - one in the index (2 lines)
 - one was committed (1 line) 
@@ -194,9 +200,13 @@ shows the difference between the **index** (b) and last commit (a).
 ```git diff``` shows the difference between **working directory** (b) and **index** (a)
 
 ```git diff commit``` shows the difference between working directory (b) and a commit (a)
+
+Next we will be committing the three different version of ```file1.txt```.
+
+
 ```bash
 $git commit -m "added second version of file1"
-# at this point the version in the index and the commit are the same. You can check using diff
+# at this point the version in the index and the last commit are the same. You can check using diff
 $git add file1.txt
 $git commit -m "added third version of file1"
 $git log --oneline
@@ -204,18 +214,44 @@ $git log --oneline
 * 880be99 added second version of file1
 * d039f56 added first version of file1
 ```
+### Commit hashes
+The output of ```git log``` gives us the "history" of our changes. In this case our work contains a single file but usually each commit stores a **complete snapshot** of the whole working directory, not just the differences. 
 
+Currently we have three different versions of our working directory (which contains file1.txt only), each with an associated hash of  160 bits (40 hex digits) for reference. The "--oneline" switch shows the first 7 hex digits and sometimes more.
 
-**Note**: you will get different values for the hashes because the hash includes the author of the commit and the timestamp (try ```git log``` to see the full information). Nex try
+**Note**: you will get different values for the hashes because the hash includes the author of the commit and the timestamp (try ```git log``` to see the full information). To compare the working directory with the first commit (i.e. d039f59) we can use 
 ```
 $git diff d039f56
 ```
-![diff2](diff2.png)
+Since commit hashes depend, among other things, on the timestamp, they have different values even if we repeat the same sequence of commands. Instead we use the symbolic reference ```main~2``` which means two commits relative to ```main```. **Note** that at this point there is no difference between the working directory and the commit pointed to by ```main```.
+```
+$git diff main~2
+diff --git a/file1.txt b/file1.txt
+index cdfc58c..ff2bf31 100644
+--- a/file1.txt
++++ b/file1.txt
+@@ -1 +1,3 @@
+ first version of file1
++second version of file1
++third version of file1
 
 ```
-$git diff 880be99
+<!-- ![diff2](diff2.png) -->
+Similary, we can compare the working directory with the penultimate commit:
+
 ```
-![diff1](diff1.png)
+$git diff main~1
+diff --git a/file1.txt b/file1.txt
+index 3e3d539..ff2bf31 100644
+--- a/file1.txt
++++ b/file1.txt
+@@ -1,2 +1,3 @@
+ first version of file1
+ second version of file1
++third version of file1
+
+```
+<!-- ![diff1](diff1.png) -->
 ## 2. Branching
 
 
@@ -226,7 +262,11 @@ Typically, to work on a new feature in a software base we create a new branch fr
 A simple branching example. 
 
 ```bash
-$git checkout -b dev # or git branch dev ; git checkout dev
+$git branch -c dev # create a new branch dev
+$git switch dev
+$git branch
+* dev
+  main
 $git log --oneline --graph --all
 * 99365ba (HEAD -> dev, main) added third verison of file1
 * 880be99 added second versio of file1
@@ -234,7 +274,7 @@ $git log --oneline --graph --all
 
 ```
 Notice that in the above output HEAD is pointing to dev.
-On branch dev we add a new file: file2.txt then make a second version of file2.txt.
+On branch dev we add a new file, ```file2.txt```, then make a second version of file2.txt.
 
 ```bash
 $echo "first version of file2"> file2.txt
@@ -243,18 +283,29 @@ $git commit -m "first version of file2"
 $echo "second version of file2">> file2.txt
 $git commit -a -m "second version of file2"
 ```
-Now switch back to branch main and add file3.txt and then a second version of file3.txt
+Note that if a file is **already tracked**, one can combine ```add``` with ```commit``` by adding the switch "-a" to commit, as we did in the last command.
+
+Now switch back to branch main and create a new file, ```file3.txt``` and then a second version of file3.txt
 
 ```bash
-$git checkout main
+$git switch main
 $echo "first version of file3"> file3.txt
 $git add file3.txt
 $git commit -m "first version of file3"
 $echo "second version of file3">> file3.txt
 $git commit -a -m "second version of file3"
 $git log --oneline -graph --all
+* 726033c (HEAD -> main) second version of file3
+* 1633b27 first version of file3
+| * 386477c (dev) second version of file2
+| * 2c92335 first version of file2
+|/  
+* 71677f6 added third verison of file1
+* 85edc50 added second version of file1
+* 8785ab7 added first version of file1
+
 ```
-![fig1](fig1.png)
+<!-- ![fig1](fig1.png) -->
 
 As you can see from the figure above we now have two **divergent**, but separate, branches.
 
@@ -262,31 +313,45 @@ As you can see from the figure above we now have two **divergent**, but separate
  Once we are satisfied with the "development" on branch **dev** typically we want to incorporate the changes into master. We make sure first that we are "on" branch main.
 
 ```bash
-$git checkout main
+$git switch main
 Already on 'main'
 $git merge dev
 ```
 A default editor will open with a default message "Merge branch 'dev'". We can change the message then save and quit.
 ```bash
 $git log --oneline --graph --all
+*   1bb3836 (HEAD -> main) Merge branch 'dev'
+|\  
+| * b239df6 (dev) second version of file2
+| * e9a2542 first version of file2
+* | 49ebadd second version of file3
+* | d0016b8 first version of file3
+|/  
+* abd9b58 added third verison of file1
+* b2a304d added second version of file1
+* 711c3b6 added first version of file1
+
 ```
-![fig2](fig2.png)
+<!-- ![fig2](fig2.png) -->
 At this point branch main contains all the changes made in dev (note that file2.txt was created and modified on branch dev only)
 ```bash
 $ls
 file1.txt  file2.txt  file3.txt
 ```
+
+## 4. Handling merge conflicts
+
 The merging operation went smoothly because we made sure not to change a file common between branches.
 If there are different versions of the same file, git does not know which one to choose so it is up to us to decide. Next we will try to merge two branches where ```file2.txt``` changed in both. But first, we get **dev** up to date with **main**.
 
 ```bash
 
-$git checkout dev
+$git switch dev
 $git merge main # get dev up to date with main
 $echo "added lines on dev" >> file2.txt
 $echo "changed on dev">>file2.txt
 $git commit -a -m "changed file2 on dev"
-$git checkout main
+$git switch main
 $echo "changed on main">> file2.txt
 $git commit -a -m "changed file2 on main"
 $git merge dev
@@ -334,8 +399,24 @@ changed on dev
 
 $git commit -a -m "fixed merge conflict on file2"
 $git log --oneline --graph --all
+*   56473e8 (HEAD -> main) fixed merge conflict on file2
+|\  
+| * 74b7640 (dev) changed file2 on dev
+* | dbadf76 changed file2 on main
+|/  
+*   1bb3836 Merge branch 'dev'
+|\  
+| * b239df6 second version of file2
+| * e9a2542 first version of file2
+* | 49ebadd second version of file3
+* | d0016b8 first version of file3
+|/  
+* abd9b58 added third verison of file1
+* b2a304d added second version of file1
+* 711c3b6 added first version of file1
+
 ```
-![fig3](fig3.png)
+<!-- ![fig3](fig3.png) -->
 
 <!-- After merging, we need to keep 'dev' update to date with 'main'.
 ```bash
@@ -343,7 +424,7 @@ git checkout dev
 git merge main
 ```
 Note the 'Fast-forward'. This is because,before the last merge, dev pointed to an ancestor of 'main' which means 'main' already incorporated everything in 'dev' so the dev pointer is just advanced to point to main. -->
-## 4. Undoing commits
+## 5. Undoing commits
 Suppose that we made a mistake in merging and we want to undo it. The safest way to undo commit(s) is to use ```revert```. This command will undo commits by 'creating reverse commits'.
 
 First we can inspect the content of ```file2.txt```  before and after the merge. After the merge:
@@ -355,9 +436,9 @@ changed on main
 changed on dev
 ```
 
- Using the above graph we see that the last commit, on **main**, before merge is 5df7022 (or ```main~1```) 
+ Using the above graph we see that the last commit, on **main**, before merge is ```main~1``` (or you can use the hash explicitly)
 ```bash
-$git checkout 5df7022 # git checkout main~1 is better
+$git checkout  main~1 
 $cat file2.txt
 first version of file2
 second version of file2
@@ -379,13 +460,14 @@ git diff main main~1
 ```
 Next we "revert" the last commit.
 ```bash
-$git revert 7669ca2 # git revert HEAD is better
-error: commit 7669ca2.... is a merge but no -m option was given.
+$git switch main # make sure we are on main
+$git revert HEAD 
+error: commit 5bd6.... is a merge but no -m option was given.
 fatal: revert failed
 ```
-The error we got is due to the fact that commit 7669ca2 has two parents, so we need to specify which parent to 'revert' to.
+The error we got is due to the fact that commit 5bd6871 has two parents, so we need to specify which parent to 'revert' to.
 ```bash
-$git revert -m 1 7669ca2 # git revert -m 1 HEAD
+$git revert -m 1 HEAD 
 $ls
 file1.txt  file2.txt  file3.txt
 $cat file2.txt
@@ -393,19 +475,37 @@ first version of file2
 second version of file2
 changed on main
 $git log --oneline --graph --all
-```
-![revert](revert.png)
+* 148a89c (HEAD -> main) Revert "fixed merge conflict on file2.text"
+*   5bd6871 fixed merge conflict on file2.text
+|\  
+| * 679fca2 (dev) changed file2 on dev
+* | 82d531c changed file2 on main
+|/  
+*   64809ab Merge branch 'dev'
+|\  
+| * 83d1d58 second version of file2
+| * 16cb9e7 first version of file2
+* | 1507554 second version of file3
+* | 8adf8b4 first version of file3
+|/  
+* b2b134f added third version of file1
+* f9b5445 added second version of file1
+* c41ee90 added first version of file1
 
-One can check that indeed commits 5493b5b and 5df7022 have the same snapshot by using diff ```git diff 5493b5b 5df7022``` (or ```git diff HEAD main~2```)
-(**Caution**: as you can see from the above graph branch dev is now an ancestor of main so ```git checkout dev;git merge main``` will fast-forward dev to main and lose all the work done in the dev branch; i.e. file2.txt)
+```
+<!-- ![revert](revert.png) -->
+
+One can check that indeed HEAD and HEAD~2 have the same snapshot by using diff ```git diff HEAD main~2```
+
+(**Caution**: as you can see from the above graph branch dev is now an ancestor of main so ```git switch dev;git merge main``` will fast-forward dev to main and lose all the work done in the dev branch; i.e. file2.txt)
 
 Another way of undoing commits is to use ```reset```. When we resolved the the previous merge conflict we removed the line "added lines on dev" and kept the line "changed on dev". Suppose that it was a mistake and we should have done the opposite. 
 
-The problem  here is that branch dev points to a commit that is an ancestor of the commit pointed to by main, so ```git checkout dev;git merge main``` will not change the contents of file2. Instead we point main to the commit that we want, in this case to ```main~1```.
+The problem  here is that branch dev points to a commit that is an ancestor of the commit pointed to by main, so ```git switch dev;git merge main``` will not change the contents of file2. Instead we point main to the commit that we want, in this case to ```main~2```.
 
 (**Note**: be cautious in using reset since it alters the history, especially if you are using a remote server).
 ```bash
-$git reset --hard 5df7022 (or git reset --hard main~1)
+$git reset --hard main~2
 $git log --oneline --graph --all
 ```
 ![reset](reset.png)
@@ -509,7 +609,7 @@ git show ???
 ``` -->
 
 
-## 5. Remote repos and Github (or Gitlab)
+## 6. Remote repos and Github (or Gitlab)
 
 
 If you don't have a Github account then
@@ -584,7 +684,7 @@ git push --set-upstream origin anotherName
 
 ``` -->
 
-## 6. Real (sort of) programming example
+## 7. Real (sort of) programming example
 
 In this example we will simulate how you would go about developing the solution for one of your labs (Leaderboard).
 First remove all the files/folders from the current directory "git-tmp".
@@ -894,7 +994,7 @@ By the end of this session, students will be able to:
 ---
 
 
-## 7. Setup
+## 8. Setup
 First login to Github and create a **new public** repo and name it ```python-ci```. The url for that repo will be ```https://github.com/your-account/python-ci```. Then open ```git-bash``` and execute the following commands
 
 ```bash
@@ -927,7 +1027,7 @@ def test_add_type_error():
 
 It also contains the file the Github workflow ```.github/workflows/python-ci.yml```
 
-### 8. Github Actions
+### 9. Github Actions
 
 GitHub Actions are workflows that automatically run when certain events happen in your repository — like when you push commits. Workflows are saved in YAML format in the repository in the directory ".github/workflows". In your favorite editor open the file below:
 
@@ -1000,7 +1100,7 @@ If we check the actions tab now it will look something like
 As you can see the second run of the action is successful.
 
 
-### 9. Protecting the main branch
+### 10. Protecting the main branch
 
 Typically, the main branch of a repository has working and well-tested code. One way to ensure that, is to disallow direct commits into the the main branch. It works as follows:
 1. commit new code to a separate branch, say **dev**
@@ -1083,7 +1183,7 @@ $git push
 Now we can perform the merge because the commit passed the required workflow. Note that the pull request was still open.
 
 
-### 10. Code review
+## 11. Code review
 Another option that is widely used is to block merges into main unless the code is reviewed by another developer or team leader.
 Go to "Settings->Collaborators" and add another Github account ("Add people"), for example the person sitting next to you in the lab. They should check their inbox as shown in the figure below and **accept** the invitation.
 ![inbox](figs/inbox.png)
@@ -1127,7 +1227,7 @@ After you merge the pull request **Disable** the ruleset "protect main" to proce
 ![disable](figs/disable-ruleset.png)
 
 
-### 11. Caching
+### 12. Caching
 
 The trivial Python code we are using in our examples does not require any dependencies. Typical production code depends on other packages which are installed by, for example, ```pip``` using a ```requirements.txt``` file.
 
@@ -1159,7 +1259,7 @@ To compare the performance of caching, edit the ```add.py``` file by adding an e
 
 
 
-### 12. Testing multiple Python versions and OS
+### 13. Testing multiple Python versions and OS
 
 In many situations we would like to test our code against multiple versions of Python and/or different operating systems. This can be done by using the "strategy/matrix" in Github actions.
 
@@ -1202,6 +1302,214 @@ After editing the workflow file, commit and push. When the run complete you can 
 
 
 
+## 14. Git Internals
+the basic structure is a map. A table of keys and values. A value is any sequence of bytes (typically a file). The key is the hash (SHA1) of the values.
+For example
+```
+
+$echo "Git Internals" | git hash-object 
+a5e39111499f3f94302ba7fdaf3acb677491cb08
+
+```
+
+If we want git to store the object we use the "-w" switch. To do so we need a git repo otherwise we get an error
+```
+$echo "Git Internals" |git hash-object --stdin -w
+fatal: not a git repository (or any of the parent directories): .git
+```
+Lets create a repo
+```
+$git init
+$echo "Git Internals" |git hash-object --stdin -w
+```
+Where is the content stored?
+```
+$ls .git/objects
+a5  info  pack
+$ls .git/objects/a5
+e39111499f3f94302ba7fdaf3acb677491cb08
+```
+the file is called a blob. It contains not only the string "Git Internals" but some header and it is compressed so we cannot read it directly.
+```
+$git cat-file a5e39111499f3f94302ba7fdaf3acb677491cb08 -t
+blob
+```
+to show the content
+```
+git cat-file a5e39111499f3f94302ba7fdaf3acb677491cb08 -p
+Git Internals
+
+```
+### How does Git track your files
+Suppose we are writing a tutorial about git and git internals. We create the following directory structure
+```
+$tree
+.
+├── README.md
+└── units
+    ├── unit1.md
+    └── unit2.md
+
+```
+The ```README.md``` is supposed to be a sort of table of contents but incomplete (we will see why shortly)
+```
+$cat README.md
+Git Internals
+$cat units/unit1.md
+Introduction
+$cat units/unit2.md
+Git Internals
+```
+The content of ```README.md``` and ```units/unit2.md``` are the same on purpose.
+
+Now create a git repo and add commit the content.
+```
+$git init
+$git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	README.md
+	units/
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+```
+$git add *
+$git commit -m "initial commit"
+$git log
+commit eb1253973ca49b519770be39f1e352c341a08495 (HEAD -> main)
+Author: hf1g22 <h.farhat@soton.ac.uk>
+Date:   Thu Jul 23 19:43:52 2026 +0100
+
+    initial commit
+
+```
 
 
+We can inspect the content of the commit by using its (shortened version) of its hash
+```
+$git cat-file -p eb12
+tree 737f4f6760e900d229607975445ac0cd24e5fee0
+author hf1g22 <h.farhat@soton.ac.uk> 1784832232 +0100
+committer hf1g22 <h.farhat@soton.ac.uk> 1784832232 +0100
 
+initial commit
+
+```
+So the commit points to a "tree" object, which is basically the root directory of a snapshot of the directory structure at the time of the commit.
+```
+$git cat-file -p 737f
+00644 blob a5e39111499f3f94302ba7fdaf3acb677491cb08	README.md
+040000 tree 79e7a822b6bbf3f2902d8c89715c8b44e9b1b273	units
+
+```
+The first entry in each line is just the file permissions which we will ignore for now. Let us see what the subtree points to
+```
+$git cat-file -p 79e7
+100644 blob e18e026a52a57735306a908392b5857dc0c48881	unit1.md
+100644 blob a5e39111499f3f94302ba7fdaf3acb677491cb08	unit2.md
+
+```
+Note that the hash for ```unit2.md``` and ```README.md``` are the same since they have the same content. Now if we go back and inspect the git object type of the commit
+```
+$git log --online
+eb12539 (HEAD -> main) initial commit
+$git cat-file -t eb12
+commit
+```
+So far we have seen three types of git objects: commit, tree, and blob. There is a fourth, annotated tag, which we will leave for later.
+
+Now edit ```units/unit1.md``` by adding underlining "Introduction"
+```
+$cat units/unit1.md
+Introduction
+------------
+$git commit -a -m "update to units/unit1"
+$git log --oneline 
+969905a (HEAD -> main) update to units/unit1
+eb12539 initial commit
+
+```
+A visualisation of the above is show in the figure below
+![vis1](internal1.png)
+Let us inspect commit  ```9699```
+```
+$git cat-file -p 9699
+tree 47fb267debea187f41c4d67faef59e0ff2291bbb
+parent eb1253973ca49b519770be39f1e352c341a08495
+author hf1g22 <h.farhat@soton.ac.uk> 1784870235 +0100
+committer hf1g22 <h.farhat@soton.ac.uk> 1784870235 +0100
+
+update to units/unit1
+
+
+```
+As one can see commits, usually, have parents (sometimes more than one), which allows us to track the commit history.
+
+### Merge & Rebase
+
+We saw how git stores objects, including commits. In this section we concentrate on operations on commits since blobs and trees handling is the same in all situations. Note that the hash of blobs and trees does not change as long as the content doesn't, whereas the hash of commits depends on the author and timestamp in addition to the message which means it almost always changes if you run the same experiment again.
+
+We start fresh and to simplify the discussion we keep a flat directory structure so there is a single tree object.
+```bash
+$git init
+$echo "Initial Readme" >> README.md
+$git add README.md
+$git commit -m "initial commit"
+$git switch -c dev
+$echo "added file1.txt in dev branch" >>file1.txt
+$git add file1.txt
+$git commit -m "added file1 in dev"
+$git switch main
+$echo "added file2.txt in main branch" >>file2.txt
+$git add file2.txt
+$git commit -m 
+$git log --oneline --graph --all
+* 7b19166 (HEAD -> main) added file2 in main
+| * 7bc80d6 (dev) added file1 in dev
+|/  
+* c0be0c6 initial commit
+$git merge -m "Merge branch dev" dev
+$git log --oneline --graph --all
+
+*   149ba37 (HEAD -> main) Merge branch dev
+|\  
+| * 7bc80d6 (dev) added file1 in dev
+* | 7b19166 added file2 in main
+|/  
+* c0be0c6 initial commit
+$git cat-file -p 149b
+tree c0e29c6aa71f3af8a8b6035e30d7b3cf79504d07
+parent 7b191666b49d77c83e6f2c52ba3c705b22577a1b
+parent 7bc80d64536dd764b776c32db8e09af9ee0ec2c3
+author hf1g22 <h.farhat@soton.ac.uk> 1784883213 +0100
+committer hf1g22 <h.farhat@soton.ac.uk> 1784883213 +0100
+
+Merge branch dev
+
+```
+Note that the merge commit has two parents and its content is the "merger" of the two.
+
+Now lets try rebase. 
+```
+$git log --online --graph --all
+*   149ba37 (HEAD -> main) Merge branch dev
+|\  
+| * 7bc80d6 (dev) added file1 in dev
+* | 7b19166 added file2 in main
+|/  
+* c0be0c6 initial commit
+$git reset --hard main~1
+$git rebase dev
+$git log --oneline --graph --all
+* 3ca4831 (HEAD -> main) added file2 in main
+* 7bc80d6 (dev) added file1 in dev
+* c0be0c6 initial commit
+
+```
+As you can see the git history does not reflect the "actual" history.
