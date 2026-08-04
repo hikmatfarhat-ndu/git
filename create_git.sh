@@ -78,7 +78,7 @@ git merge feature1
 git merge feature2
 sed '/^>\|^<\|^=/d' leaderboard.py > tmp
 mv -f tmp leaderboard.py
-git commit -a -m "fixed merge conflict"
+git commit -a -m "merged feature1 and feature2"
 git push
 git branch -d feature1
 git branch -d feature2
@@ -100,6 +100,39 @@ git checkout dev
 git merge main
 git push
 
+
+code=$(cat << EOF
+def display_leaderboard(leaderboard,n=3):
+    
+    lst=sorted(leaderboard.items(),key=lambda x:x[1])
+    r=min(n,len(lst))
+    count=0
+    
+    for i in range(r):
+        if lst[i][1] is not None:
+            print(f'{i+1}\t{lst[i][0]}\t{lst[i][1]}')
+            count+=1
+    if count==0:
+        print("Leaderboard is empty")
+EOF
+)
+echo "$code" >>leaderboard.py
+git commit -a -m "implemented display"
+git log --oneline --graph --all
+
+code=$(cat << EOF
+lb=init_leaderboard()
+add_player(lb,player_name='Jon')
+add_player(lb,player_name='Chris')
+add_run(lb,player_name='Jon',time=timedelta(minutes=47))
+add_run(lb,player_name='Chris',time=timedelta(minutes=18))
+add_run(lb,player_name='Jon',time=timedelta(minutes=23))
+display_leaderboard(lb)
+EOF
+)
+echo "$code">> leaderboard.py
+git add leaderboard.py
+git commit --amend -m "implemented display with tests"
 }
 # Basics
 if [ $# = 0 ]

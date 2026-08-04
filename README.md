@@ -507,8 +507,22 @@ The problem  here is that branch dev points to a commit that is an ancestor of t
 ```bash
 $git reset --hard main~2
 $git log --oneline --graph --all
+* 0f43545 (dev) changed file2 on dev
+| * fcc0bc8 (HEAD -> main) changed file2 on main
+|/  
+*   e680917 Merge branch 'dev'
+|\  
+| * 39ea67d second version of file2
+| * 2876b02 first version of file2
+* | 883cf54 second version of file3
+* | d8e60ba first version of file3
+|/  
+* e50bdd0 added third verison of file1
+* 70fe52b added second version of file1
+* d27b827 added first version of file1
+
 ```
-![reset](reset.png)
+<!-- ![reset](reset.png) -->
 Let us do the merge again, but this time  keeping "added lines on dev" and removing "changed on dev".
 
 ```bash
@@ -609,38 +623,41 @@ git show ???
 ``` -->
 
 
-## 6. Remote repos and Github (or Gitlab)
+## 6. Remote repos and  Gitlab
 
-
+<!-- 
 If you don't have a Github account then
 1. Go to https://github.com
 2. Top right click on "Sign up" to get the page below
 
-![signup](signup.png)
+![signup](signup.png) -->
 
-Login to your account on  ```https://github.com```.
-1. In the top right click "New"
-2. In "Repository Name" write ```git-tmp```
-3. In "Choose Visibility" select ```private```
-4. In the bottom click "Create Repository"
+Login to your account on  ```https://git.soton.ac.uk```.
+1. In the left panel select "projects"
+3. In the top right click "New Project"
+4. Choose "Create blank project"
+5. In "Project ame" write ```git-tmp```
+6. Select your username from the dropdown menu next to "Project URL"
+6. In "visibility Level" select private.
+7. Uncheck "Intialize repository with README"
    
-Next we want to inform git of the remote repository
+Our goal is to sync the local git with the remote one. First we need to inform git of the remote repository
 ```bash
 $git remote add origin URL
 ```
-Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```https://github.com/username/git-tmp``` which you can copy directly from the browser address bar.
+Here we gave it the name origin (instead of using URL every time). In this case the URL is of the form ```https://git.soton.ac.uk/username/git-tmp``` which you can copy directly from the browser address bar.
 
 At this point the remote repository has no branches. Next we want to setup remote branches to be tracked by the local ones.
 ```bash
-$git checkout main
+$git switch main
 $git push -u origin main
-$git checkout dev 
+$git switch dev 
 $git push -u origin dev
 ```
 The "-u" option is done once at the beginning, and it is short for "--set-upstream". "push" pushes the local changes to the upstream repository.
-Next go to ```https://github.com/username/git-tmp``` and create a new file "file4.txt", i.e. "Add file->Create new file" as shown below:
-<!-- ![gitlab1](gitlab1.png).  -->
-![github1](github-create-new.png)
+Next go to ```https://git.soton.ac.uk/username/git-tmp``` and create a new file "file4.txt", i.e. "+ new file" as shown below:
+![gitlab1](gitlab1.png). 
+<!-- ![github1](github-create-new.png) -->
 
 Write "First version of file4" in the file and click "Commit changes".
 ![github2](github-add-new.png)
@@ -654,7 +671,7 @@ $git pull
 ``` 
 The command ```pull``` is a combination of ```fetch``` and, if the current branch is behind the remote, ```merge```. Since the current local branch is ```dev``` then ```pull``` will execute ```fetch``` only.
 ```bash
-$git checkout main
+$git switch main
 Switched to branch 'main'
 Your branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.
   (use "git pull" to update your local branch)
@@ -694,9 +711,9 @@ Power shell
 >Remove-Item -Force -Recurse *
 ``` -->
 Linux shell
-```
+```bash
 $cd git-tmp
-$shopt -s dotglob
+$shopt -s dotglob 
 $rm -rf *
 $shopt -u dotglob
 ```
@@ -736,12 +753,12 @@ Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard```
 ```bash
 >git remote add origing https://git.soton.ac.uk/username/leaderboard
 -->
-Got to ```https://github.com``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
+Got to ```https://git.soton.ac.uk``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
 
 ```bash
-$git remote add origin https://github.com/yourusername/leaderboard
+$git remote add origin https://git.soton.ac.uk/username/leaderboard
 $git push -u origin main
-$git checkout -b dev
+$git branch -c dev
 $git push -u origin dev
 ```
 **Note**: it is **important** to push main first. The first branch is considered as default.
@@ -756,7 +773,7 @@ $git branch -c feature2
 
 The "first developer" works on ```add_run```
 ```bash
-$git checkout feature1
+$git switch feature1
 ```
 copy the code below to ```leaderboard.py```
 
@@ -777,7 +794,7 @@ $git commit -a -m "implemented add_run"
 ```
 The "second developer" uses the feature2 branch.
 ```bash
-$git checkout feature2
+$git switch feature2
 ```
 copy the code below to ```leaderboard.py```
 ```python
@@ -794,12 +811,17 @@ $git commit -a -m "implemented clear_score"
 at this point we check the progress and we see that the two development branches have diverged
 ```bash
 $git log --oneline --graph --all
+* daf694e (HEAD -> feature2) implemented clear_score
+| * e2116d9 (feature1) implemented add_run
+|/  
+* ed327ef (origin/main, origin/dev, main, dev) implemented init and add_player
+
 ```
-![diverge](diverge.png)
+<!-- ![diverge](diverge.png) -->
 
 To incorporate the changes we merge the two branches into dev.
 ```bash
-$git checkout dev
+$git switch dev
 $git merge feature1
 ```
 Next we incorporate the changes from feature2. This will cause a merge conflict.
@@ -810,11 +832,23 @@ You can fix the merge conflict either by editing the code in ```leaderboard.py``
 ```
 ...
 ...
-<<<<<<<<HEAD
-content in main but not in dev2
+<<<<<<< HEAD
+def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int:
+    if time.total_seconds()<0:
+        return 1
+    if player_name not in leaderboard:
+        return 2
+
+    if leaderboard[player_name]==None or leaderboard[player_name]> time:
+        leaderboard.update({player_name:time})
+    return 0
 =======
-content in dev2 but not in main
->>>>>>>> feature2
+def clear_score(leaderboard,player_name):
+    if player_name not in leaderboard:
+        return False
+    leaderboard.update({player_name:None})
+    return True
+>>>>>>> feature2
 
 ```
 You can edit the above the way you like but in this case we want to keep both changes so all we have to do is remove the lines containing "<<<<<<", ">>>>>>" and "=======" and save the file.
@@ -822,11 +856,12 @@ You can edit the above the way you like but in this case we want to keep both ch
 $git add leaderboard.py
 $git commit -m "merged feature1 and feature2"
 ```
-A second way to do the merge is by using your IDE. For example, after the second merge command, open ```leaderboard.py``` in PyCharm and click the button at the top right corner "resolve conflicts" which will open a window with 3 panes as shown below.
+A second way to do the merge is by using your IDE. For example, after the second merge command, open ```leaderboard.py``` in vscode and click the button at the bottom right corner "Resolve in Merge Editor" which will open a window with 2 panes as shown below.
+
 ![resolve-conflicts](resolve-conflicts.png)
-You can choose to add or remove the parts which are different. In our case we need to add both so press on ">>" on both left and right panes and press "apply". Finally
+You can choose to add or remove the parts which are different. In our case we need to add both so press "Accept Combination". Press "Complete Merge" in the bottom right corner.  Finally,
 ```bash
-$git commit -m "merged feature1 and feature2"
+$git commit  -m "merged feature1 and feature2"
 ```
 The branches ```feature1``` and ```feature2``` are local branches so there is no need to keep them.
 ```bash
@@ -838,24 +873,30 @@ To update the remote **dev** branch
 ```bash
 $git push
 ```
-Now go to ```https://github.com/username/leaderboard``` (refresh if necessary). On the top of the page, press the "Compare & pull request".
+Now go to ```https://git.soton.ac.uk/username/leaderboard``` (refresh if necessary). On the top of the page, press the "Create  merge request".
 - In the "Title" write "new features" 
 - In the "Description" write "implemented add_run and clear_score". 
-- Press "Create pull request".
-The above created a request to merge the changes in **dev** into the **main** branch.
+- Press "Create merge request".
+**Uncheck** "Delete source branch" to keep branch ```dev```
+and press "Merge".
+**Note:** it might take a few seconds for the merge to complete.
+ 
+<!-- The above created a request to merge the changes in **dev** into the **main** branch.
 
 ![merge-pull](merge-pull.png)
 
- Push "Merge pull request", optionally edit the "Commit message" and "Confirm merge". Finally, update our local repository
+ Push "Merge pull request", optionally edit the "Commit message" and "Confirm merge".
+  -->
+  Finally, update our local repository
 ```bash
-$git checkout main
+$git switch main
 $git pull
 ```
-<!-- 
-Now developer 1 is tasked with implementing ```display_leaderboar```. First we need to bring branch ```dev``` in line with ```main```.
+
+Now developer 1 is tasked with implementing the function ```display_leaderboar```. First we need to bring branch ```dev``` in line with ```main```.
 
 ```bash
-git checkout dev
+git switch dev
 git merge main
 ```
 Copy the code below to ```leaderboard.py```.
