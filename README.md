@@ -145,7 +145,7 @@ $echo "third version of file1">> file1.txt
 ```
 At this point we have **three** versions of file1.txt (as shown in the figure below):
 
-![3-v](../git/three-versions.png)
+![3-v](three-versions.png)
 
 - one in the working directory (3 lines)
 - one in the index (2 lines)
