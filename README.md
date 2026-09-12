@@ -1,8 +1,8 @@
----
+<!-- ---
 title: Introduction to Git
 author: Hikmat Farhat
 version: 1.0
----
+--- -->
 
 # GIT
 
@@ -649,7 +649,7 @@ Login to your account on  ```https://git.soton.ac.uk```.
 1. In the left panel select "projects"
 3. In the top right click "New Project"
 4. Choose "Create blank project"
-5. In "Project ame" write ```git-tmp```
+5. In "Project name" write ```git-tmp```
 6. Select your username from the dropdown menu next to "Project URL"
 6. In "visibility Level" select private.
 7. Uncheck "Intialize repository with README"
@@ -668,6 +668,7 @@ $git switch dev
 $git push -u origin dev
 ```
 The "-u" option is done once at the beginning, and it is short for "--set-upstream". "push" pushes the local changes to the upstream repository.
+
 Next go to ```https://git.soton.ac.uk/username/git-tmp``` and create a new file "file4.txt", i.e. "+ new file" as shown below:
 ![gitlab1](gitlab1.png). 
 <!-- ![github1](github-create-new.png) -->
@@ -766,7 +767,7 @@ Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard```
 ```bash
 >git remote add origing https://git.soton.ac.uk/username/leaderboard
 -->
-Got to ```https://git.soton.ac.uk``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
+Got to ```https://git.soton.ac.uk``` and create a new repository (project) called ```leaderboard``` (make sure you don't initialise it with README).
 
 ```bash
 $git remote add origin https://git.soton.ac.uk/username/leaderboard
@@ -830,6 +831,11 @@ $git log --oneline --graph --all
 * ed327ef (origin/main, origin/dev, main, dev) implemented init and add_player
 
 ```
+We can also check the difference
+```bash
+$git diff feature1 feature2
+```
+
 <!-- ![diverge](diverge.png) -->
 
 To incorporate the changes we merge the two branches into dev.
@@ -841,7 +847,7 @@ Next we incorporate the changes from feature2. This will cause a merge conflict.
 ```bash
 $git merge feature2
 ```
-You can fix the merge conflict either by editing the code in ```leaderboard.py``` directly. When you open ```leaderboard.py``` in any editor you will see something like this:
+You can fix the merge conflict by editing the code in ```leaderboard.py``` directly. When you open ```leaderboard.py``` in any editor you will see something like this:
 ```
 ...
 ...
@@ -933,7 +939,22 @@ git commit -a -m "implemented display"
 git log --oneline --graph --all
 ```
 
-![img](amend1.png)
+<!-- ![img](amend1.png) -->
+```bash
+* 8907ce2 (HEAD -> dev) implemented display
+*   9e6f121 (origin/main, main) Merge branch 'dev' into 'main'
+|\  
+| *   eaed0bb (origin/dev) merged feature1 and feature2
+| |\  
+| | * d334c55 implemented clear_score
+| |/  
+|/|   
+| * de952b4 implemented add_run
+|/  
+* 1d85f97 implemented init and add_player
+
+
+```
 Usually it is best to run some tests before committing, which we forgot to do. Add the following code
 ```python
 lb=init_leaderboard()
@@ -949,8 +970,21 @@ We don't want to add an extra commit but replace the last one, so
 ```bash
 git add leaderboard.py
 git commit --amend -m "implemented display with tests"
+
+* 67f608a (HEAD -> dev) implemented display with tests
+*   9e6f121 (origin/main, main) Merge branch 'dev' into 'main'
+|\  
+| *   eaed0bb (origin/dev) merged feature1 and feature2
+| |\  
+| | * d334c55 implemented clear_score
+| |/  
+|/|   
+| * de952b4 implemented add_run
+|/  
+* 1d85f97 implemented init and add_player
+
 ```
-![img](amend2.png)
+<!-- ![img](amend2.png) -->
 Notice how the new commit replaced the last one. The hash is different because the message is different.
 
 We have a (almost) working code.
@@ -984,21 +1018,38 @@ by
 For bug fixes we usually create a new branch. ```git switch -c fix``` then replace the code as above and
 ```bash
 git commit -a -m "fixed sorted"
-git checkout main
-git merge fix
+git switch main
+git merge --no-ff fix
 git branch -D fix
 git log --oneline --graph --all
 ```
-![img](fix1.png)
+We have used "--no-ff" to explicitly create a new merge commit. Otherwise, git will fast-forward main to point at fix and we get a "linear" history which makes it look that the fix was applied directly to main.
+<!-- ![img](fix1.png) -->
 We can compare the fix with the previous commit
 ```bash
-git diff  69c0705 c75dd7e
+git diff  main main~1
 ```
-![img](fix2.png)
+<!-- ![img](fix2.png) -->
+```bash
+diff --git a/leaderboard.py b/leaderboard.py
+index 86d4bdc..d185b2d 100644
+--- a/leaderboard.py
++++ b/leaderboard.py
+@@ -26,8 +26,7 @@ def clear_score(leaderboard,player_name):
+ 
+ def display_leaderboard(leaderboard,n=3):
+     
+-    lst = sorted(leaderboard.items(), key=lambda x: (x[1] is None, x[1]))
+-
++    lst=sorted(leaderboard.items(),key=lambda x:x[1])
+     r=min(n,len(lst))
+     count=0
 
+```
 
 Finally, we push the changes to the remote
 ```bash
-git push -u origin main
+git push origin main
 ``` 
+
 
