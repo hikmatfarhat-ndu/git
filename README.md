@@ -1,3 +1,9 @@
+---
+title: Introduction to Git
+author: Hikmat Farhat
+version: 1.0
+---
+
 # GIT
 
 <!--
@@ -310,7 +316,7 @@ $git log --oneline -graph --all
 As you can see from the figure above we now have two **divergent**, but separate, branches.
 
 ## 3. Merging 
- Once we are satisfied with the "development" on branch **dev** typically we want to incorporate the changes into master. We make sure first that we are "on" branch main.
+ Once we are satisfied with the "development" on branch **dev** typically we want to incorporate the changes into main. We make sure first that we are "on" branch main.
 
 ```bash
 $git switch main
@@ -342,7 +348,9 @@ file1.txt  file2.txt  file3.txt
 ## 4. Handling merge conflicts
 
 The merging operation went smoothly because we made sure not to change a file common between branches.
-If there are different versions of the same file, git does not know which one to choose so it is up to us to decide. Next we will try to merge two branches where ```file2.txt``` changed in both. But first, we get **dev** up to date with **main**.
+If there are different versions of the same file, git does not know which one to choose so it is up to us to decide. Next we will try to merge two branches where ```file2.txt``` changed in both. But first, we get **dev** up to date with **main**. 
+
+Note that since **dev** is an ancestor of **main** merge just updates **dev** to point to the same commit as **main**. In git jargon this is called "fast-forward".
 
 ```bash
 
@@ -458,6 +466,7 @@ git diff main main~1
 -changed on dev
 
 ```
+
 Next we "revert" the last commit.
 ```bash
 $git switch main # make sure we are on main
@@ -497,7 +506,11 @@ $git log --oneline --graph --all
 
 One can check that indeed HEAD and HEAD~2 have the same snapshot by using diff ```git diff HEAD main~2```
 
-(**Caution**: as you can see from the above graph branch dev is now an ancestor of main so ```git switch dev;git merge main``` will fast-forward dev to main and lose all the work done in the dev branch; i.e. file2.txt)
+(**Caution**: as you can see from the above graph branch dev is now an ancestor of main so ```git switch dev;git merge main``` will fast-forward dev to main)
+
+
+**Note**: unlike revert, when doing checkout and diff how does git we did not need to specify which parent? (lookup how ~ works)
+
 
 Another way of undoing commits is to use ```reset```. When we resolved the the previous merge conflict we removed the line "added lines on dev" and kept the line "changed on dev". Suppose that it was a mistake and we should have done the opposite. 
 
