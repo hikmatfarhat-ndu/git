@@ -762,28 +762,20 @@ $git add leaderboard.py .gitignore
 $git commit -m "implemented init and add_player"
 
 ```
-<!--
-Go to ```git.soton.ac.uk``` and create a new repository called ```leaderboard``` (make sure you don't initialise it with README).
-```bash
->git remote add origing https://git.soton.ac.uk/username/leaderboard
--->
+
 Got to ```https://git.soton.ac.uk``` and create a new repository (project) called ```leaderboard``` (make sure you don't initialise it with README).
 
 ```bash
 $git remote add origin https://git.soton.ac.uk/username/leaderboard
 $git push -u origin main
-$git branch -c dev
-$git push -u origin dev
 ```
-**Note**: it is **important** to push main first. The first branch is considered as default.
-
 
 Next, "two of our developers" will implement ```add_run``` and ```clear_score```. Towards that end, each developer creates a different branch
 ```bash
 $git branch -c feature1
 $git branch -c feature2
 ```
-**Note**: Each developer works on their local computer and since the feature branches will be deleted later it is possible for both branches to have the same name "feature" since they are on different computer and will not be uploaded to the remote server. For now, since we are "simulating" this workflow on the same computer we give the two branches different names. 
+**Note**: Usually each developer works on their local computer. For now, we are "simulating" this workflow on the same computer. 
 
 The "first developer" works on ```add_run```
 ```bash
@@ -805,7 +797,21 @@ def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int
 Save the file and
 ```bash
 $git commit -a -m "implemented add_run"
+$git push -u origin feature1
 ```
+Now go to ```https://git.soton.ac.uk/username/leaderboard```. You will see a "create merge request" button at the top of the page.
+Click the button and you will see a page that asks you, among other things, for the description of the changes. Write "developer 1 implemented add_run". At the bottom you will see that "Delete source branch..." is already checked. This is the default behaviour. At the bottom press the "create merge request".
+
+Wait for "auto merge" to turn into "merge" then click merge. It takes a few seconds. When merge is done delete feature 1 (ignore the warning)
+```bash
+$git switch main
+$git branch -d feature1
+```
+
+
+
+
+
 The "second developer" uses the feature2 branch.
 ```bash
 $git switch feature2
@@ -821,36 +827,34 @@ def clear_score(leaderboard,player_name):
 Save the file and 
 ```bash
 $git commit -a -m "implemented clear_score"
+$git push -u origin feature2
 ```
-at this point we check the progress and we see that the two development branches have diverged
+Go to ```https://git.soton.ac.uk/username/leaderboard``` and follow the same procedure to do the merge request.
+
+It will show "Merge blocked" and "Merge conflict must be resolved".
+
+To resolve the conflict:
+1. update main
+2. merge main into feature2
+3. resolve the conflict locally.
+4. push to remote
+
 ```bash
-$git log --oneline --graph --all
-* daf694e (HEAD -> feature2) implemented clear_score
-| * e2116d9 (feature1) implemented add_run
-|/  
-* ed327ef (origin/main, origin/dev, main, dev) implemented init and add_player
+$git switch main
+$git pull
+$git switch feature2
+$git merge main
+
+Auto-merging leaderboard.py
+CONFLICT (content): Merge conflict in leaderboard.py
+Automatic merge failed; fix conflicts and then commit the result.
 
 ```
-We can also check the difference
-```bash
-$git diff feature1 feature2
-```
 
-<!-- ![diverge](diverge.png) -->
-
-To incorporate the changes we merge the two branches into dev.
-```bash
-$git switch dev
-$git merge feature1
-```
-Next we incorporate the changes from feature2. This will cause a merge conflict.
-```bash
-$git merge feature2
-```
 You can fix the merge conflict by editing the code in ```leaderboard.py``` directly. When you open ```leaderboard.py``` in any editor you will see something like this:
 ```
-...
-...
+............
+............
 <<<<<<< HEAD
 def add_run(leaderboard:dict[str,timedelta],player_name:str,time:timedelta)->int:
     if time.total_seconds()<0:
@@ -870,47 +874,68 @@ def clear_score(leaderboard,player_name):
 >>>>>>> feature2
 
 ```
-You can edit the above the way you like but in this case we want to keep both changes so all we have to do is remove the lines containing "<<<<<<", ">>>>>>" and "=======" and save the file.
+You can edit the above the way you like but in this case we want to keep both changes, so all we have to do is remove the lines containing "<<<<<<", ">>>>>>" and "=======" and save the file.
 ```bash
 $git add leaderboard.py
-$git commit -m "merged feature1 and feature2"
+$git commit -m "resolved conflict"
+$git push origin feature2
 ```
+Go to ```https://git.soton.ac.uk/username/leaderboard``` and you will see that the merge request that was previously blocked is ready to be merged. If the "Merge" button doesn't show reload the page. Merge then
+```bash
+$git switch main
+$git pull
+$git branch -d feature2
+```
+
 A second way to do the merge is by using your IDE. For example, after the second merge command, open ```leaderboard.py``` in vscode and click the button at the bottom right corner "Resolve in Merge Editor" which will open a window with 2 panes as shown below.
 
 ![resolve-conflicts](resolve-conflicts.png)
 You can choose to add or remove the parts which are different. In our case we need to add both so press "Accept Combination". Press "Complete Merge" in the bottom right corner.  Finally,
 ```bash
-$git commit  -m "merged feature1 and feature2"
-```
-The branches ```feature1``` and ```feature2``` are local branches so there is no need to keep them.
-```bash
-$git branch -D feature1
-$git branch -D feature2
+$git commit  -m "resolved conflict"
 $git log --oneline --graph --all
+
+*   6e1b819 (HEAD -> main, origin/main) Merge branch 'feature2' into 'main'
+|\  
+| *   302c68d (origin/feature2) resolved conflict
+| |\  
+| |/  
+|/|   
+* |   7e9bdab Merge branch 'feature1' into 'main'
+|\ \  
+| * | 628173d (origin/feature1) implemented add_run
+|/ /  
+| * 3d269a5 implemented clear_score
+|/  
+* 4682b20 implemented init and add_player
+
 ```
-To update the remote **dev** branch
+
+Notice how ```origin/feature1``` and ```origin/feature2``` are still there even though we asked for their deletion in the merge request. Those are stale pointers.
+
 ```bash
-$git push
+$git pull --prune
+$git log --oneline --graph --all
+
+*   6e1b819 (HEAD -> main, origin/main) Merge branch 'feature2' into 'main'
+|\  
+| *   302c68d resolved conflict
+| |\  
+| |/  
+|/|   
+* |   7e9bdab Merge branch 'feature1' into 'main'
+|\ \  
+| * | 628173d implemented add_run
+|/ /  
+| * 3d269a5 implemented clear_score
+|/  
+* 4682b20 implemented init and add_player
+
 ```
-Now go to ```https://git.soton.ac.uk/username/leaderboard``` (refresh if necessary). On the top of the page, press the "Create  merge request".
-- In the "Title" write "new features" 
-- In the "Description" write "implemented add_run and clear_score". 
-- Press "Create merge request".
-**Uncheck** "Delete source branch" to keep branch ```dev```
-and press "Merge".
-**Note:** it might take a few seconds for the merge to complete.
+<!-- As an exercise repeat the leaderboard process but in the merge request "quash -->
+
+<!-- 
  
-<!-- The above created a request to merge the changes in **dev** into the **main** branch.
-
-![merge-pull](merge-pull.png)
-
- Push "Merge pull request", optionally edit the "Commit message" and "Confirm merge".
-  -->
-  Finally, update our local repository
-```bash
-$git switch main
-$git pull
-```
 
 Now developer 1 is tasked with implementing the function ```display_leaderboar```. First we need to bring branch ```dev``` in line with ```main```.
 
@@ -937,9 +962,9 @@ def display_leaderboard(leaderboard,n=3):
 ```bash
 git commit -a -m "implemented display"
 git log --oneline --graph --all
-```
+``` -->
 
-<!-- ![img](amend1.png) -->
+<!-- 
 ```bash
 * 8907ce2 (HEAD -> dev) implemented display
 *   9e6f121 (origin/main, main) Merge branch 'dev' into 'main'
@@ -954,8 +979,9 @@ git log --oneline --graph --all
 * 1d85f97 implemented init and add_player
 
 
-```
-Usually it is best to run some tests before committing, which we forgot to do. Add the following code
+``` -->
+
+<!-- Usually it is best to run some tests before committing, which we forgot to do. Add the following code
 ```python
 lb=init_leaderboard()
 add_player(lb,player_name='Jon')
@@ -965,8 +991,8 @@ add_run(lb,player_name='Chris',time=timedelta(minutes=18))
 add_run(lb,player_name='Jon',time=timedelta(minutes=23))
 display_leaderboard(lb)
 
-```
-We don't want to add an extra commit but replace the last one, so
+``` -->
+<!-- We don't want to add an extra commit but replace the last one, so
 ```bash
 git add leaderboard.py
 git commit --amend -m "implemented display with tests"
@@ -983,8 +1009,8 @@ git commit --amend -m "implemented display with tests"
 |/  
 * 1d85f97 implemented init and add_player
 
-```
-<!-- ![img](amend2.png) -->
+``` -->
+<!-- 
 Notice how the new commit replaced the last one. The hash is different because the message is different.
 
 We have a (almost) working code.
@@ -992,10 +1018,10 @@ We have a (almost) working code.
 ```bash
 git branch -D dev1
 git branch -D dev2
-``` -->
+``` --> 
 
 
-
+<!-- 
 Our code has a bug. A problem occurs if a player has no run (None). For example, if we add a player "Jack" without any run we get an error when ```display_leaderboard``` is called. This is caused by the ```sorted``` function since ```None``` is not comparable.
 ```python
 lb=init_leaderboard()
@@ -1023,13 +1049,14 @@ git merge --no-ff fix
 git branch -D fix
 git log --oneline --graph --all
 ```
-We have used "--no-ff" to explicitly create a new merge commit. Otherwise, git will fast-forward main to point at fix and we get a "linear" history which makes it look that the fix was applied directly to main.
-<!-- ![img](fix1.png) -->
+We have used "--no-ff" to explicitly create a new merge commit. Otherwise, git will fast-forward main to point at fix and we get a "linear" history which makes it look that the fix was applied directly to main. -->
+
+<!-- 
 We can compare the fix with the previous commit
 ```bash
 git diff  main main~1
 ```
-<!-- ![img](fix2.png) -->
+
 ```bash
 diff --git a/leaderboard.py b/leaderboard.py
 index 86d4bdc..d185b2d 100644
@@ -1045,11 +1072,11 @@ index 86d4bdc..d185b2d 100644
      r=min(n,len(lst))
      count=0
 
-```
+``` -->
 
-Finally, we push the changes to the remote
+<!-- Finally, we push the changes to the remote
 ```bash
 git push origin main
-``` 
+```  -->
 
 
